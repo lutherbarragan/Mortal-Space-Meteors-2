@@ -1,7 +1,10 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
+const timer = document.getElementById('timer');
 
 let interval;
+let timerInterval;
+let time = 0;
 let frames = 0;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png'
@@ -26,18 +29,21 @@ class Board {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 	};
 }
+
 // instances
 let board = new Board();
 
 // Main Functions
 function start() {
 	interval = setInterval(update, 1000 / 60);
+	timerInterval = setInterval(() => {
+		timer.innerText = time;
+		time++;
+	}, 1000);
 }
 
 function update() {
 	frames++;
-	console.log(frames);
-
 	//  erase current content
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
