@@ -2,9 +2,10 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const timer = document.getElementById('timer');
 
-let interval;
+let mainInterval;
 let timerInterval;
 let time = 0;
+let isRunning = false;
 let frames = 0;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png'
@@ -35,7 +36,8 @@ let board = new Board();
 
 // Main Functions
 function start() {
-	interval = setInterval(update, 1000 / 60);
+	isRunning = true;
+	mainInterval = setInterval(update, 1000 / 60);
 	timerInterval = setInterval(() => {
 		timer.innerText = time;
 		time++;
@@ -51,9 +53,16 @@ function update() {
 	board.draw();
 }
 
-function stop() {}
+function stop() {
+	isRunning = false;
+	clearInterval(mainInterval);
+	clearInterval(timerInterval);
+}
 
 // listeners
 addEventListener('keydown', (e) => {
-	if (e.keyCode == 13) start();
+	if (e.keyCode == 13) {
+		if (isRunning) stop();
+		else start();
+	}
 });
