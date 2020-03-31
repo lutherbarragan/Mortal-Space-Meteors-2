@@ -24,6 +24,7 @@ class Player {
 		this.img = new Image();
 		this.img.src = imgs.player1;
 		this.img.onload = this.draw;
+		this.gravity = 4;
 	}
 
 	draw = () => {
