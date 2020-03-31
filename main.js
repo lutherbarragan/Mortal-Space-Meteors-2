@@ -8,7 +8,8 @@ let time = 0;
 let isRunning = false;
 let frames = 0;
 const imgs = {
-	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png'
+	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
+	player1: 'https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png'
 };
 
 canvas.width = window.visualViewport.width;
@@ -35,6 +36,7 @@ function update() {
 
 	//  (Re) Draw new content
 	board.draw();
+	player1.draw();
 }
 
 function stop() {
@@ -42,11 +44,3 @@ function stop() {
 	clearInterval(mainInterval);
 	clearInterval(timerInterval);
 }
-
-// listeners
-addEventListener('keydown', (e) => {
-	if (e.keyCode == 13) {
-		if (isRunning) stop();
-		else start();
-	}
-});
