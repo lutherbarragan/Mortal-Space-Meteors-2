@@ -4,7 +4,7 @@ const timer = document.getElementById('timer');
 
 let mainInterval;
 let timerInterval;
-let time = 0;
+let time = 1;
 let isRunning = false;
 let frames = 0;
 const imgs = {
