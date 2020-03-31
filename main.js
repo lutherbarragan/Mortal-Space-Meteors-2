@@ -16,6 +16,7 @@ canvas.height = window.visualViewport.height;
 
 // instances
 let board = new Board();
+let player1 = new Player();
 
 // Main Functions
 function start() {
