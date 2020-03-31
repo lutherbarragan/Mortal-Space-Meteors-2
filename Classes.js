@@ -29,5 +29,6 @@ class Player {
 
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		this.y += this.gravity;
 	};
 }
