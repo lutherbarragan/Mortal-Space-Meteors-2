@@ -25,10 +25,72 @@ class Player {
 		this.img.src = imgs.player1;
 		this.img.onload = this.draw;
 		this.gravity = 4;
+		this.moveSpeed = 2;
 	}
 
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		this.y += this.gravity;
+	};
+
+	moveLeft = () => {
+		if (player1.x - player1.width < 0) return;
+
+		let distanceTravelled = 0;
+		let moveDownIntr = setInterval(() => {
+			this.x -= this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.width * 0.75) {
+				clearInterval(moveDownIntr);
+			}
+		}, 2);
+	};
+
+	moveRight = () => {
+		if (player1.x + player1.width >= canvas.width - player1.width) return;
+
+		let distanceTravelled = 0;
+		let moveDownIntr = setInterval(() => {
+			this.x += this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.width * 0.75) {
+				clearInterval(moveDownIntr);
+			}
+		}, 2);
+	};
+
+	moveUp = () => {
+		if (this.y - this.height < 0) return;
+
+		this.gravity = 0;
+		let distanceTravelled = 0;
+
+		let moveUpIntr = setInterval(() => {
+			this.y -= this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.height * 0.75) {
+				clearInterval(moveUpIntr);
+				setTimeout(() => {
+					this.gravity = 4;
+				}, 25);
+			}
+		}, 2);
+	};
+
+	moveDown = () => {
+		if (player1.y + player1.height >= canvas.height) return;
+
+		let distanceTravelled = 0;
+		let moveDownIntr = setInterval(() => {
+			this.y += this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.height * 0.75) {
+				clearInterval(moveDownIntr);
+			}
+		}, 2);
 	};
 }
