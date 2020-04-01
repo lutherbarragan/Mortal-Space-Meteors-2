@@ -16,9 +16,9 @@ class Board {
 }
 
 class Player {
-	constructor() {
-		this.x = canvas.width / 2;
-		this.y = canvas.height / 2;
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
 		this.width = 50;
 		this.height = 50;
 		this.img = new Image();

@@ -17,11 +17,14 @@ canvas.height = window.visualViewport.height;
 
 // instances
 let board = new Board();
-let player1 = new Player();
+let player1 = new Player(canvas.width / 2, canvas.height / 2);
 
 // Main Functions
 function start() {
 	isRunning = true;
+	timer.style.top = '50px';
+	timer.innerText = 0;
+
 	mainInterval = setInterval(update, 1000 / 60);
 	timerInterval = setInterval(() => {
 		timer.innerText = time;
