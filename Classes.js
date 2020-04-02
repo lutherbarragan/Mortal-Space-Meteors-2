@@ -26,6 +26,7 @@ class Player {
 		this.img.onload = this.draw;
 		this.gravity = 4;
 		this.moveSpeed = 2;
+		this.score = 0;
 	}
 
 	draw = () => {

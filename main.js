@@ -1,10 +1,10 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const timer = document.getElementById('timer');
+const score = document.getElementById('score');
 
 let mainInterval;
-let timerInterval;
-let time = 1;
+let time = 0;
 let isRunning = false;
 let frames = 0;
 const imgs = {
@@ -23,17 +23,24 @@ let player1 = new Player(canvas.width / 2, canvas.height / 2);
 function start() {
 	isRunning = true;
 	timer.style.top = '50px';
-	timer.innerText = 0;
+	score.style.display = 'block';
+	timer.innerText = time;
 
-	mainInterval = setInterval(update, 1000 / 60);
-	timerInterval = setInterval(() => {
-		timer.innerText = time;
-		time++;
-	}, 1000);
+	mainInterval = setInterval(update, 10); // 100FPS
 }
 
 function update() {
 	frames++;
+	player1.score += 1;
+
+	// 1 second
+	if (frames % 100 == 0) {
+		time++;
+		timer.innerText = time;
+	}
+	// 0.01 second (fps speed)
+	score.innerText = `Score: ${player1.score}`;
+
 	//  erase current content
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -45,5 +52,4 @@ function update() {
 function stop() {
 	isRunning = false;
 	clearInterval(mainInterval);
-	clearInterval(timerInterval);
 }
