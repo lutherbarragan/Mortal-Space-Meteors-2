@@ -24,7 +24,7 @@ class Player {
 		this.img = new Image();
 		this.img.src = imgs.player1;
 		this.img.onload = this.draw;
-		this.gravity = 4;
+		this.gravity = 2;
 		this.moveSpeed = 2;
 		this.score = 0;
 	}
@@ -42,10 +42,10 @@ class Player {
 			this.x -= this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.width * 0.75) {
+			if (distanceTravelled >= this.width) {
 				clearInterval(moveDownIntr);
 			}
-		}, 2);
+		}, 1);
 	};
 
 	moveRight = () => {
@@ -56,10 +56,10 @@ class Player {
 			this.x += this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.width * 0.75) {
+			if (distanceTravelled >= this.width) {
 				clearInterval(moveDownIntr);
 			}
-		}, 2);
+		}, 1);
 	};
 
 	moveUp = () => {
@@ -72,13 +72,13 @@ class Player {
 			this.y -= this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.height * 0.75) {
+			if (distanceTravelled >= this.height) {
 				clearInterval(moveUpIntr);
 				setTimeout(() => {
-					this.gravity = 4;
+					this.gravity = 2;
 				}, 25);
 			}
-		}, 2);
+		}, 1);
 	};
 
 	moveDown = () => {
@@ -89,9 +89,9 @@ class Player {
 			this.y += this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.height * 0.75) {
+			if (distanceTravelled >= this.height) {
 				clearInterval(moveDownIntr);
 			}
-		}, 2);
+		}, 1);
 	};
 }
