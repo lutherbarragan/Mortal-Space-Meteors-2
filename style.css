@@ -10,6 +10,27 @@ body {
 	position: relative;
 }
 
+#pause-screen {
+	display: none;
+	color: white;
+	padding-top: 40vh;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+#pause-screen p {
+	font-size: 100px;
+	font-weight: 500;
+	transform: translateY(-100%);
+}
+#pause-screen p:nth-child(2) {
+	font-size: 50px;
+}
+
 #score {
 	color: white;
 	font-size: 40px;
@@ -24,6 +45,7 @@ body {
 	color: white;
 	font-size: 80px;
 	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
 	position: absolute;
 	top: 40%;
 	left: 50%;

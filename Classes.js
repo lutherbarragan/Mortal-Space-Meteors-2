@@ -34,34 +34,6 @@ class Player {
 		this.y += this.gravity;
 	};
 
-	moveLeft = () => {
-		if (player1.x - player1.width < 0) return;
-
-		let distanceTravelled = 0;
-		let moveDownIntr = setInterval(() => {
-			this.x -= this.moveSpeed;
-			distanceTravelled += this.moveSpeed;
-
-			if (distanceTravelled >= this.width) {
-				clearInterval(moveDownIntr);
-			}
-		}, 1);
-	};
-
-	moveRight = () => {
-		if (player1.x + player1.width >= canvas.width - player1.width) return;
-
-		let distanceTravelled = 0;
-		let moveDownIntr = setInterval(() => {
-			this.x += this.moveSpeed;
-			distanceTravelled += this.moveSpeed;
-
-			if (distanceTravelled >= this.width) {
-				clearInterval(moveDownIntr);
-			}
-		}, 1);
-	};
-
 	moveUp = () => {
 		if (this.y - this.height < 0) return;
 
@@ -90,6 +62,34 @@ class Player {
 			distanceTravelled += this.moveSpeed;
 
 			if (distanceTravelled >= this.height) {
+				clearInterval(moveDownIntr);
+			}
+		}, 1);
+	};
+
+	moveLeft = () => {
+		if (player1.x - player1.width < 0) return;
+
+		let distanceTravelled = 0;
+		let moveDownIntr = setInterval(() => {
+			this.x -= this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.width) {
+				clearInterval(moveDownIntr);
+			}
+		}, 1);
+	};
+
+	moveRight = () => {
+		if (player1.x + player1.width >= canvas.width - player1.width) return;
+
+		let distanceTravelled = 0;
+		let moveDownIntr = setInterval(() => {
+			this.x += this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.width) {
 				clearInterval(moveDownIntr);
 			}
 		}, 1);

@@ -2,10 +2,12 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const timer = document.getElementById('timer');
 const score = document.getElementById('score');
+const pauseScreen = document.getElementById('pause-screen');
 
 let mainInterval;
 let time = 0;
 let isRunning = false;
+let isPaused = false;
 let frames = 0;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
@@ -25,6 +27,7 @@ function start() {
 	timer.style.top = '50px';
 	score.style.display = 'block';
 	timer.innerText = time;
+	pauseScreen.style.display = 'none';
 
 	mainInterval = setInterval(update, 10); // 100FPS
 }
@@ -51,5 +54,6 @@ function update() {
 
 function stop() {
 	isRunning = false;
+	pauseScreen.style.display = 'block';
 	clearInterval(mainInterval);
 }
