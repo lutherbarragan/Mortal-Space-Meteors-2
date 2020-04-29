@@ -95,3 +95,23 @@ class Player {
 		}, 1);
 	};
 }
+
+class Meteor {
+	constructor(props) {
+		this.id = Date.now();
+		this.x = document.width / 2;
+		this.y = 0;
+		this.width = props.width;
+		this.height = props.height;
+		this.img = new Image();
+		this.img.src = imgs.meteor;
+		this.img.onload = this.draw;
+		this.speed = props.speed;
+		this.hp = props.hp;
+	}
+
+	draw = () => {
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		this.y -= this.speed;
+	};
+}
