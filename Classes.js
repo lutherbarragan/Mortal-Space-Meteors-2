@@ -99,10 +99,10 @@ class Player {
 class Meteor {
 	constructor(props) {
 		this.id = Date.now();
-		this.x = 200;
-		this.y = 100;
 		this.width = props.width;
 		this.height = props.width;
+		this.x = Math.floor(Math.random() * canvas.width);
+		this.y = 0 - this.height;
 		this.img = new Image();
 		this.img.src = imgs.meteor;
 		this.img.onload = this.draw;
