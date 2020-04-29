@@ -82,7 +82,9 @@ function update() {
 	//  (Re) Draw new content
 	board.draw();
 	player1.draw();
-	meteors.forEach((meteor) => meteor.draw());
+	meteors.forEach((meteor) => {
+		if (meteor.y < canvas.height) meteor.draw();
+	});
 }
 
 function stop() {
