@@ -21,6 +21,12 @@ canvas.height = window.visualViewport.height;
 // instances
 let board = new Board();
 let player1 = new Player(canvas.width / 2, canvas.height / 2);
+let meteor = new Meteor({
+	width: 50,
+	height: 50,
+	hp: 5,
+	speed: 2
+});
 
 // Main Functions
 function start() {
@@ -51,6 +57,8 @@ function update() {
 	//  (Re) Draw new content
 	board.draw();
 	player1.draw();
+	meteor.draw();
+	console.log(meteor);
 }
 
 function stop() {

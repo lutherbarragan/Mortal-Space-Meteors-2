@@ -99,7 +99,7 @@ class Player {
 class Meteor {
 	constructor(props) {
 		this.id = Date.now();
-		this.x = document.width / 2;
+		this.x = 200;
 		this.y = 0;
 		this.width = props.width;
 		this.height = props.height;
@@ -112,6 +112,6 @@ class Meteor {
 
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		this.y -= this.speed;
+		this.y += this.speed;
 	};
 }
