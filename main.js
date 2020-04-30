@@ -56,7 +56,7 @@ function checkMeteorsCollitions(player) {
 	meteors.forEach((meteor) => {
 		if (meteor.hp > 0) {
 			if (meteor.checkCollition(player)) {
-				player.y += 40;
+				player.y += 80;
 			}
 		}
 	});
