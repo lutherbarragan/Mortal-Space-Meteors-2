@@ -114,4 +114,13 @@ class Meteor {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		this.y += this.speed;
 	};
+
+	checkCollition = (player) => {
+		return (
+			this.x < player.x + player.width &&
+			this.x + this.width > player.x &&
+			this.y < player.y + player.height &&
+			this.y + this.height > player.y
+		);
+	};
 }

@@ -52,6 +52,16 @@ function spawnMeteor() {
 	meteors.push(new Meteor(newMeteor));
 }
 
+function checkMeteorsCollitions(player) {
+	meteors.forEach((meteor) => {
+		if (meteor.hp > 0) {
+			if (meteor.checkCollition(player)) {
+				player.y += 40;
+			}
+		}
+	});
+}
+
 // Main Functions
 function start() {
 	isRunning = true;
@@ -81,7 +91,10 @@ function update() {
 
 	//  (Re) Draw new content
 	board.draw();
+	checkMeteorsCollitions(player1);
+
 	player1.draw();
+
 	meteors.forEach((meteor) => {
 		if (meteor.y < canvas.height) meteor.draw();
 	});
