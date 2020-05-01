@@ -10,6 +10,7 @@ let time = 0;
 let isRunning = false;
 let isPaused = false;
 let frames = 0;
+let spawnSpeed = 500;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
 	player1: 'https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png',
@@ -70,7 +71,7 @@ function start() {
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 
-	meteorSpawner = setInterval(spawnMeteor, 900);
+	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 }
 
@@ -82,7 +83,12 @@ function update() {
 	if (frames % 100 == 0) {
 		time++;
 		timer.innerText = time;
+
+		clearInterval(meteorSpawner);
+		spawnSpeed -= 2;
+		meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	}
+
 	// 0.01 second (fps speed)
 	score.innerText = `Score: ${player1.score}`;
 
