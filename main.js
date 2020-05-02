@@ -10,7 +10,8 @@ let time = 0;
 let isRunning = false;
 let isPaused = false;
 let frames = 0;
-let spawnSpeed = 500;
+let spawnSpeed = 1000;
+// let extraSpeed = 0;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
 	player1: 'https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png',
@@ -24,31 +25,31 @@ canvas.height = window.visualViewport.height;
 let board = new Board();
 let player1 = new Player(canvas.width / 2, canvas.height / 2);
 let meteors = [];
+const meteorTypes = [
+	{
+		width: 100,
+		speed: 10,
+		hp: 2
+	},
+	{
+		width: 150,
+		speed: 6,
+		hp: 3
+	},
+	{
+		width: 200,
+		speed: 4,
+		hp: 4
+	},
+	{
+		width: 250,
+		speed: 2,
+		hp: 5
+	}
+];
 
 // Aux Functions
 function spawnMeteor() {
-	const meteorTypes = [
-		{
-			width: 100,
-			speed: 10,
-			hp: 2
-		},
-		{
-			width: 150,
-			speed: 6,
-			hp: 3
-		},
-		{
-			width: 200,
-			speed: 4,
-			hp: 4
-		},
-		{
-			width: 250,
-			speed: 2,
-			hp: 5
-		}
-	];
 	const newMeteor = meteorTypes[Math.floor(Math.random() * 4)];
 	meteors.push(new Meteor(newMeteor));
 }
@@ -83,10 +84,19 @@ function update() {
 	if (frames % 100 == 0) {
 		time++;
 		timer.innerText = time;
-
-		clearInterval(meteorSpawner);
-		spawnSpeed -= 2;
-		meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+		if (spawnSpeed > 300) {
+			clearInterval(meteorSpawner);
+			spawnSpeed -= 5;
+			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+			console.log(spawnSpeed);
+		}
+	}
+	// 10 seconds
+	if (frames % 4000 == 0) {
+		// more speed (?)
+		// extraSpeed++;
+		// console.log(extraSpeed);
+		// meteorTypes.forEach((meteor) => (meteor.speed += extraSpeed));
 	}
 
 	// 0.01 second (fps speed)
