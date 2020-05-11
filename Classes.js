@@ -124,3 +124,19 @@ class Meteor {
 		);
 	};
 }
+
+class Bullet {
+	constructor(x, y) {
+		this.id = Date.now();
+		this.width = 6;
+		this.height = 18;
+		this.x = x;
+		this.y = y;
+	}
+
+	draw = () => {
+		ctx.fillStyle = `rgb(255, 255, 255)`;
+		ctx.fillRect(this.x, this.y, this.width, this.height);
+		this.y -= 8;
+	};
+}

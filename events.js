@@ -13,5 +13,11 @@ addEventListener('keydown', (e) => {
 		if (e.keyCode == 68) player1.moveRight();
 		if (e.keyCode == 87) player1.moveUp();
 		if (e.keyCode == 83) player1.moveDown();
+		if (e.keyCode == 32) {
+			const x = player1.x + player1.width / 2;
+			const y = player1.y;
+
+			bullets.push(new Bullet(x, y));
+		}
 	}
 });

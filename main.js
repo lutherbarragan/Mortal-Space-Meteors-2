@@ -24,7 +24,8 @@ canvas.height = window.visualViewport.height;
 // instances
 let board = new Board();
 let player1 = new Player(canvas.width / 2, canvas.height / 2);
-let meteors = [];
+const meteors = [];
+const bullets = [];
 const meteorTypes = [
 	{
 		width: 100,
@@ -86,9 +87,9 @@ function update() {
 		timer.innerText = time;
 		if (spawnSpeed > 300) {
 			clearInterval(meteorSpawner);
-			spawnSpeed -= 5;
+			spawnSpeed -= 7;
 			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
-			console.log(spawnSpeed);
+			// console.log(spawnSpeed);
 		}
 	}
 	// 10 seconds
@@ -114,6 +115,8 @@ function update() {
 	meteors.forEach((meteor) => {
 		if (meteor.y < canvas.height) meteor.draw();
 	});
+
+	bullets.forEach((bullet) => bullet.draw());
 }
 
 function stop() {
