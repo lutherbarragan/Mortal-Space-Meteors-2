@@ -27,6 +27,7 @@ class Player {
 		this.gravity = 2;
 		this.moveSpeed = 2;
 		this.score = 0;
+		this.type = 'player';
 	}
 
 	draw = () => {
@@ -108,19 +109,22 @@ class Meteor {
 		this.img.onload = this.draw;
 		this.speed = props.speed;
 		this.hp = props.hp;
+		this.type = 'obstacle';
 	}
 
 	draw = () => {
-		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		this.y += this.speed;
+		if (this.hp > 0) {
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			this.y += this.speed;
+		}
 	};
 
-	checkCollition = (player) => {
+	checkCollition = (unit) => {
 		return (
-			this.x < player.x + player.width &&
-			this.x + this.width > player.x &&
-			this.y < player.y + player.height &&
-			this.y + this.height > player.y
+			this.x < unit.x + unit.width &&
+			this.x + this.width > unit.x &&
+			this.y < unit.y + unit.height &&
+			this.y + this.height > unit.y
 		);
 	};
 }
@@ -132,11 +136,16 @@ class Bullet {
 		this.height = 18;
 		this.x = x;
 		this.y = y;
+		this.damage = 1;
+		this.allowToDraw = true;
+		this.type = 'bullet';
 	}
 
 	draw = () => {
-		ctx.fillStyle = `rgb(255, 255, 255)`;
-		ctx.fillRect(this.x, this.y, this.width, this.height);
-		this.y -= 8;
+		if (this.allowToDraw) {
+			ctx.fillStyle = `rgb(255, 255, 255)`;
+			ctx.fillRect(this.x, this.y, this.width, this.height);
+			this.y -= 8;
+		}
 	};
 }

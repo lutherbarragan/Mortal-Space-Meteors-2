@@ -55,11 +55,17 @@ function spawnMeteor() {
 	meteors.push(new Meteor(newMeteor));
 }
 
-function checkMeteorsCollitions(player) {
+function checkMeteorsCollitions(unit) {
 	meteors.forEach((meteor) => {
 		if (meteor.hp > 0) {
-			if (meteor.checkCollition(player)) {
-				player.y += 80;
+			if (meteor.checkCollition(unit)) {
+				// unit.y += 80;
+				if (unit.type == 'player') unit.y += 80;
+
+				if (unit.type == 'bullet') {
+					unit.allowToDraw = false;
+					meteor.hp -= unit.damage;
+				}
 			}
 		}
 	});
@@ -108,9 +114,14 @@ function update() {
 
 	//  (Re) Draw new content
 	board.draw();
+
 	checkMeteorsCollitions(player1);
 
 	player1.draw();
+
+	bullets.forEach((bullet) => {
+		if (bullet.allowToDraw) checkMeteorsCollitions(bullet);
+	});
 
 	meteors.forEach((meteor) => {
 		if (meteor.y < canvas.height) meteor.draw();
