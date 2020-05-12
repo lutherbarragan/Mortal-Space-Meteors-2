@@ -31,14 +31,36 @@ body {
 	font-size: 50px;
 }
 
-#score {
+.text {
 	color: white;
 	font-size: 40px;
 	font-family: Arial, Helvetica, sans-serif;
-	position: absolute;
+	display: none;
+}
+
+#score {
 	top: 10px;
 	left: 10px;
-	display: none;
+}
+
+#xlg {
+	top: 50px;
+	left: 10px;
+}
+
+#lg {
+	top: 100px;
+	left: 10px;
+}
+
+#md {
+	top: 150px;
+	left: 10px;
+}
+
+#sm {
+	top: 200px;
+	left: 10px;
 }
 
 #timer {
@@ -46,7 +68,6 @@ body {
 	font-size: 80px;
 	font-family: Arial, Helvetica, sans-serif;
 	text-align: center;
-	position: absolute;
 	top: 40%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -55,4 +76,8 @@ body {
 .smooth {
 	transition: all 2s;
 	border: 5px solid red;
+}
+
+.absolute {
+	position: absolute;
 }

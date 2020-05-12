@@ -109,6 +109,8 @@ class Meteor {
 		this.img.onload = this.draw;
 		this.speed = props.speed;
 		this.hp = props.hp;
+		this.value = props.value;
+		this.size = props.size;
 		this.type = 'obstacle';
 	}
 

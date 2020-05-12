@@ -2,6 +2,10 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const timer = document.getElementById('timer');
 const score = document.getElementById('score');
+const xlgScore = document.getElementById('xlg');
+const lgScore = document.getElementById('lg');
+const mdScore = document.getElementById('md');
+const smScore = document.getElementById('sm');
 const pauseScreen = document.getElementById('pause-screen');
 
 let mainInterval;
@@ -26,26 +30,40 @@ let board = new Board();
 let player1 = new Player(canvas.width / 2, canvas.height / 2);
 const meteors = [];
 const bullets = [];
+const meteorScore = {
+	sm: 0,
+	md: 0,
+	lg: 0,
+	xlg: 0
+};
 const meteorTypes = [
 	{
 		width: 100,
 		speed: 10,
-		hp: 2
+		hp: 2,
+		value: 1000,
+		size: 'sm'
 	},
 	{
 		width: 150,
 		speed: 6,
-		hp: 3
+		hp: 3,
+		value: 2000,
+		size: 'md'
 	},
 	{
 		width: 200,
 		speed: 4,
-		hp: 4
+		hp: 4,
+		value: 4000,
+		size: 'lg'
 	},
 	{
 		width: 250,
 		speed: 2,
-		hp: 5
+		hp: 5,
+		value: 5000,
+		size: 'xlg'
 	}
 ];
 
@@ -65,6 +83,28 @@ function checkMeteorsCollitions(unit) {
 				if (unit.type == 'bullet') {
 					unit.allowToDraw = false;
 					meteor.hp -= unit.damage;
+
+					if (meteor.hp <= 0) {
+						switch (meteor.size) {
+							case 'sm':
+								meteorScore.sm++;
+								break;
+							case 'md':
+								meteorScore.md++;
+								break;
+							case 'lg':
+								meteorScore.lg++;
+								break;
+							case 'xlg':
+								meteorScore.xlg++;
+								break;
+
+							default:
+								break;
+						}
+						player1.score += meteor.value;
+						console.log(meteorScore);
+					}
 				}
 			}
 		}
@@ -76,6 +116,10 @@ function start() {
 	isRunning = true;
 	timer.style.top = '50px';
 	score.style.display = 'block';
+	xlgScore.style.display = 'block';
+	lgScore.style.display = 'block';
+	mdScore.style.display = 'block';
+	smScore.style.display = 'block';
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 
@@ -108,6 +152,11 @@ function update() {
 
 	// 0.01 second (fps speed)
 	score.innerText = `Score: ${player1.score}`;
+
+	xlgScore.innerText = `xlg: ${meteorScore.xlg}`;
+	lgScore.innerText = `lg: ${meteorScore.lg}`;
+	mdScore.innerText = `md: ${meteorScore.md}`;
+	smScore.innerText = `sm: ${meteorScore.sm}`;
 
 	//  erase current content
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
