@@ -83,6 +83,7 @@ function checkMeteorsCollitions(unit) {
 				if (unit.type == 'bullet') {
 					unit.allowToDraw = false;
 					meteor.hp -= unit.damage;
+					meteor.y -= 15;
 
 					if (meteor.hp <= 0) {
 						switch (meteor.size) {

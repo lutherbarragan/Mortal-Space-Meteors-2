@@ -17,10 +17,10 @@ class Board {
 
 class Player {
 	constructor(x, y) {
-		this.x = x;
-		this.y = y;
 		this.width = 50;
 		this.height = 50;
+		this.x = x - this.width / 2;
+		this.y = y - this.height / 2;
 		this.img = new Image();
 		this.img.src = imgs.player1;
 		this.img.onload = this.draw;
