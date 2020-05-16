@@ -38,6 +38,10 @@ body {
 	display: none;
 }
 
+#timer {
+	display: block;
+}
+
 #score {
 	top: 10px;
 	left: 10px;
