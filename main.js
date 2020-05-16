@@ -12,7 +12,6 @@ let mainInterval;
 let meteorSpawner;
 let time = 0;
 let isRunning = false;
-let isPaused = false;
 let frames = 0;
 let spawnSpeed = 1000;
 // let extraSpeed = 0;
