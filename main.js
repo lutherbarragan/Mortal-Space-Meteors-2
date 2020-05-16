@@ -77,34 +77,15 @@ function checkMeteorsCollitions(unit) {
 	meteors.forEach((meteor) => {
 		if (meteor.hp > 0) {
 			if (meteor.checkCollition(unit)) {
-				// unit.y += 80;
 				if (unit.type == 'player') unit.y += 80;
 
 				if (unit.type == 'bullet') {
 					unit.allowToDraw = false;
-					meteor.hp -= unit.damage;
-					meteor.y -= 15;
+					meteor.takeDamage(unit.damage);
 
 					if (meteor.hp <= 0) {
-						switch (meteor.size) {
-							case 'sm':
-								meteorScore.sm++;
-								break;
-							case 'md':
-								meteorScore.md++;
-								break;
-							case 'lg':
-								meteorScore.lg++;
-								break;
-							case 'xlg':
-								meteorScore.xlg++;
-								break;
-
-							default:
-								break;
-						}
+						meteorScore[meteor.size]++;
 						player1.score += meteor.value;
-						console.log(meteorScore);
 					}
 				}
 			}

@@ -129,6 +129,11 @@ class Meteor {
 			this.y + this.height > unit.y
 		);
 	};
+
+	takeDamage = (damage) => {
+		this.hp -= damage;
+		this.y -= 15;
+	};
 }
 
 class Bullet {
