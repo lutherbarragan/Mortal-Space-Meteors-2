@@ -159,6 +159,16 @@ function update() {
 	});
 
 	bullets.forEach((bullet) => bullet.draw());
+
+	if (player1.y > canvas.height) {
+		stop();
+
+		let gameOver = `
+            <p>GAME OVER</p>
+            <p>Refresh page to play again</p>
+        `;
+		pauseScreen.innerHTML = gameOver;
+	}
 }
 
 function stop() {
