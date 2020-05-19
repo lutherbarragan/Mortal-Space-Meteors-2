@@ -1,4 +1,8 @@
 // listeners
+window.addEventListener('load', () => {
+	if (!localStorage.getItem('MSM2TopScore')) localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
+});
+
 addEventListener('keydown', (e) => {
 	// GAME EVENTS
 	if (e.keyCode == 13) {

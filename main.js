@@ -2,6 +2,7 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const timer = document.getElementById('timer');
 const score = document.getElementById('score');
+const topScore = document.getElementById('topScore');
 const xlgScore = document.getElementById('xlg');
 const lgScore = document.getElementById('lg');
 const mdScore = document.getElementById('md');
@@ -15,6 +16,16 @@ let time = 0;
 let isRunning = false;
 let frames = 0;
 let spawnSpeed = 1000;
+let savedData = {
+	score: 0,
+	time: 0,
+	meteors: {
+		xlg: 0,
+		lg: 0,
+		md: 0,
+		sm: 0
+	}
+};
 // let extraSpeed = 0;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
@@ -95,9 +106,13 @@ function checkMeteorsCollitions(unit) {
 
 // Main Functions
 function start() {
+	savedData = JSON.parse(localStorage.getItem('MSM2TopScore'));
+
 	isRunning = true;
 	timer.style.top = '50px';
 	score.style.display = 'block';
+	topScore.style.display = 'block';
+	topScore.childNodes[3].innerText = savedData.score;
 	meteorScores.style.display = 'block';
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
@@ -109,6 +124,16 @@ function start() {
 function update() {
 	frames++;
 	player1.score += 1;
+
+	if (savedData.score < player1.score) {
+		savedData.score = player1.score;
+		savedData.time = time;
+		savedData.meteors = { ...meteorScore };
+
+		topScore.childNodes[3].innerText = savedData.score;
+
+		localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
+	}
 
 	// 1 second
 	if (frames % 100 == 0) {
