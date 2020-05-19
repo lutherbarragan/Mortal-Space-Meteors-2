@@ -33,10 +33,7 @@ body {
 
 #timer,
 #score,
-#xlg,
-#lg,
-#md,
-#sm {
+#meteor-scores {
 	color: white;
 	font-size: 40px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -53,23 +50,44 @@ body {
 	left: 10px;
 }
 
-#xlg {
-	top: 50px;
-	left: 10px;
+.meteor-score {
+	background-image: url("https://imga.androidappsapk.co/zhZdXcmO9dgAcu27xEEIvf_tb7TMqxhqdrG5nI9ECl9NMtvJXR00_E4z4x8p7PTX_Ew=s100");
+	background-size: cover;
+	position: absolute;
 }
 
-#lg {
+.meteor-score span {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#xlg {
+	width: 100px;
+	height: 100px;
 	top: 100px;
 	left: 10px;
 }
 
+#lg {
+	width: 90px;
+	height: 90px;
+	top: 210px;
+	left: 10px;
+}
+
 #md {
-	top: 150px;
+	width: 80px;
+	height: 80px;
+	top: 310px;
 	left: 10px;
 }
 
 #sm {
-	top: 200px;
+	width: 70px;
+	height: 70px;
+	top: 400px;
 	left: 10px;
 }
 

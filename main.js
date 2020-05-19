@@ -6,6 +6,7 @@ const xlgScore = document.getElementById('xlg');
 const lgScore = document.getElementById('lg');
 const mdScore = document.getElementById('md');
 const smScore = document.getElementById('sm');
+const meteorScores = document.getElementById('meteor-scores');
 const pauseScreen = document.getElementById('pause-screen');
 
 let mainInterval;
@@ -97,10 +98,7 @@ function start() {
 	isRunning = true;
 	timer.style.top = '50px';
 	score.style.display = 'block';
-	xlgScore.style.display = 'block';
-	lgScore.style.display = 'block';
-	mdScore.style.display = 'block';
-	smScore.style.display = 'block';
+	meteorScores.style.display = 'block';
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 
@@ -133,11 +131,10 @@ function update() {
 
 	// 0.01 second (fps speed)
 	score.innerText = `Score: ${player1.score}`;
-
-	xlgScore.innerText = `xlg: ${meteorScore.xlg}`;
-	lgScore.innerText = `lg: ${meteorScore.lg}`;
-	mdScore.innerText = `md: ${meteorScore.md}`;
-	smScore.innerText = `sm: ${meteorScore.sm}`;
+	xlgScore.childNodes[1].innerText = meteorScore.xlg;
+	lgScore.childNodes[1].innerText = meteorScore.lg;
+	mdScore.childNodes[1].innerText = meteorScore.md;
+	smScore.childNodes[1].innerText = meteorScore.sm;
 
 	//  erase current content
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
