@@ -33,9 +33,9 @@ canvas.height = BODY.offsetHeight;
 
 // let extraSpeed = 0;
 const imgs = {
-	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
-	player1: 'https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png',
-	meteor: 'https://lh4.ggpht.com/zhZdXcmO9dgAcu27xEEIvf_tb7TMqxhqdrG5nI9ECl9NMtvJXR00_E4z4x8p7PTX_Ew=w220',
+	background: 'src/SPACE_BACKGROUND.png',
+	player1: 'src/SHIP_P1.png',
+	meteor: 'src/METEOR.png',
 };
 
 // instances
