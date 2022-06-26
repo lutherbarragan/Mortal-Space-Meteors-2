@@ -121,7 +121,7 @@ class Meteor {
 		}
 	};
 
-	checkCollition = (unit) => {
+	checkCollition = unit => {
 		return (
 			this.x < unit.x + unit.width &&
 			this.x + this.width > unit.x &&
@@ -130,7 +130,7 @@ class Meteor {
 		);
 	};
 
-	takeDamage = (damage) => {
+	takeDamage = damage => {
 		this.hp -= damage;
 		this.y -= 15;
 	};

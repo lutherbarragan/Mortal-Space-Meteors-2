@@ -1,45 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Mortal Space Meteors 2</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png">
-</head>
-<body>
-    <div id="pause-screen">
-        <p>GAME PAUSED</p>
-        <p>PRESS ENTER TO RESUME</p>
-    </div>
-    <p id="timer">Press Enter!</p>
-    <p id="score">Score: 0</p>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Mortal Space Meteors 2</title>
+		<link rel="stylesheet" href="style.css" />
+		<link
+			rel="icon"
+			type="image/png"
+			href="https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png"
+		/>
+	</head>
+	<body>
+		<div id="pause-screen">
+			<p>GAME PAUSED</p>
+			<p>PRESS ENTER TO RESUME</p>
+		</div>
+		<p id="timer">Press Enter!</p>
+		<p id="score">Score: 0</p>
 
-    <p id="topScore">
-        TOP SCORE
-        <br>
-        <span>0</span>
-    </p>
+		<p id="topScore">
+			TOP SCORE
+			<br />
+			<span>0</span>
+		</p>
 
-    <div id="meteor-scores">
-        <div id="xlg" class="meteor-score">
-            <span>0</span>
-        </div>
-        <div id="lg" class="meteor-score">
-            <span>0</span>
-        </div>
-        <div id="md" class="meteor-score">
-            <span>0</span>
-        </div>
-        <div id="sm" class="meteor-score">
-            <span>0</span>
-        </div>
-    </div>
+		<div id="meteor-scores">
+			<div id="xlg" class="meteor-score">
+				<span>0</span>
+			</div>
+			<div id="lg" class="meteor-score">
+				<span>0</span>
+			</div>
+			<div id="md" class="meteor-score">
+				<span>0</span>
+			</div>
+			<div id="sm" class="meteor-score">
+				<span>0</span>
+			</div>
+		</div>
 
-    <canvas></canvas>
-    <script src="Classes.js"></script>
-    <script src="main.js"></script>
-    <script src="events.js"></script>
-</body>
+		<canvas></canvas>
+		<script src="Classes.js"></script>
+		<script src="events.js"></script>
+		<script src="main.js"></script>
+	</body>
 </html>

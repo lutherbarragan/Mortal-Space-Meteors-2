@@ -1,3 +1,4 @@
+const BODY = document.querySelector('body');
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const timer = document.getElementById('timer');
@@ -23,18 +24,19 @@ let savedData = {
 		xlg: 0,
 		lg: 0,
 		md: 0,
-		sm: 0
-	}
+		sm: 0,
+	},
 };
+
+canvas.width = BODY.offsetWidth;
+canvas.height = BODY.offsetHeight;
+
 // let extraSpeed = 0;
 const imgs = {
 	background: 'https://pbs.twimg.com/media/ECbeOgkXYAAgJ-F.png',
 	player1: 'https://opengameart.org/sites/default/files/pitrizzo-SpaceShip-gpl3-opengameart-96x96.png',
-	meteor: 'https://imga.androidappsapk.co/zhZdXcmO9dgAcu27xEEIvf_tb7TMqxhqdrG5nI9ECl9NMtvJXR00_E4z4x8p7PTX_Ew=s100'
+	meteor: 'https://lh4.ggpht.com/zhZdXcmO9dgAcu27xEEIvf_tb7TMqxhqdrG5nI9ECl9NMtvJXR00_E4z4x8p7PTX_Ew=w220',
 };
-
-canvas.width = window.visualViewport.width;
-canvas.height = window.visualViewport.height;
 
 // instances
 let board = new Board();
@@ -45,7 +47,7 @@ const meteorScore = {
 	sm: 0,
 	md: 0,
 	lg: 0,
-	xlg: 0
+	xlg: 0,
 };
 const meteorTypes = [
 	{
@@ -53,29 +55,29 @@ const meteorTypes = [
 		speed: 10,
 		hp: 2,
 		value: 1000,
-		size: 'sm'
+		size: 'sm',
 	},
 	{
 		width: 150,
 		speed: 6,
 		hp: 3,
 		value: 2000,
-		size: 'md'
+		size: 'md',
 	},
 	{
 		width: 200,
 		speed: 4,
 		hp: 4,
 		value: 4000,
-		size: 'lg'
+		size: 'lg',
 	},
 	{
 		width: 250,
 		speed: 2,
 		hp: 5,
 		value: 5000,
-		size: 'xlg'
-	}
+		size: 'xlg',
+	},
 ];
 
 // Aux Functions
@@ -85,7 +87,7 @@ function spawnMeteor() {
 }
 
 function checkMeteorsCollitions(unit) {
-	meteors.forEach((meteor) => {
+	meteors.forEach(meteor => {
 		if (meteor.hp > 0) {
 			if (meteor.checkCollition(unit)) {
 				if (unit.type == 'player') unit.y += 80;
@@ -171,15 +173,15 @@ function update() {
 
 	player1.draw();
 
-	bullets.forEach((bullet) => {
+	bullets.forEach(bullet => {
 		if (bullet.allowToDraw) checkMeteorsCollitions(bullet);
 	});
 
-	meteors.forEach((meteor) => {
+	meteors.forEach(meteor => {
 		if (meteor.y < canvas.height) meteor.draw();
 	});
 
-	bullets.forEach((bullet) => bullet.draw());
+	bullets.forEach(bullet => bullet.draw());
 
 	if (player1.y > canvas.height) {
 		stop();
