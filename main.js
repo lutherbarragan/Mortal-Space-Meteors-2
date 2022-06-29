@@ -20,7 +20,6 @@ let savedData = {
 	score: 0,
 	time: 0,
 	meteors: {
-		xlg: 0,
 		lg: 0,
 		md: 0,
 		sm: 0,
@@ -106,7 +105,6 @@ function start() {
 	score.style.display = 'block';
 	topScore.style.display = 'block';
 	topScore.childNodes[3].innerText = savedData.score;
-	meteorScores.style.display = 'block';
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 

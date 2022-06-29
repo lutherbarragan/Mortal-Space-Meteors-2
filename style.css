@@ -20,6 +20,7 @@ body {
 
 body {
 	height: 100vh;
+	position: relative;
 }
 
 #pause-screen {
@@ -46,7 +47,7 @@ body {
 
 #timer,
 #score,
-#meteor-scores,
+.meteor-scores,
 #topScore {
 	color: white;
 	font-size: 40px;
@@ -80,10 +81,28 @@ body {
 	cursor: pointer;
 }
 
+.meteor-scores {
+	background-color: rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	width: 100px;
+	height: 300px;
+	top: 10vh;
+	padding: 20px 20px 20px 0;
+	border: 4px solid black;
+	border-top-right-radius: 50px;
+	border-bottom-right-radius: 50px;
+}
+
 .meteor-score {
-	background-image: url('https://lh4.ggpht.com/zhZdXcmO9dgAcu27xEEIvf_tb7TMqxhqdrG5nI9ECl9NMtvJXR00_E4z4x8p7PTX_Ew=w220');
+	display: block;
+	width: 100px;
+	height: 100px;
+	background-image: url('src/METEOR.png');
 	background-size: cover;
-	position: absolute;
+	position: relative;
 }
 
 .meteor-score span {
@@ -93,32 +112,19 @@ body {
 	transform: translate(-50%, -50%);
 }
 
-#xlg {
-	width: 100px;
-	height: 100px;
-	top: 100px;
-	left: 10px;
-}
-
 #lg {
 	width: 90px;
 	height: 90px;
-	top: 210px;
-	left: 10px;
 }
 
 #md {
 	width: 80px;
 	height: 80px;
-	top: 310px;
-	left: 10px;
 }
 
 #sm {
 	width: 70px;
 	height: 70px;
-	top: 400px;
-	left: 10px;
 }
 
 #timer {
