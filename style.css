@@ -47,7 +47,7 @@ body {
 
 #timer,
 #score,
-.meteor-scores,
+#meteor-scores,
 #topScore {
 	color: white;
 	font-size: 40px;
@@ -81,9 +81,9 @@ body {
 	cursor: pointer;
 }
 
-.meteor-scores {
+#meteor-scores {
 	background-color: rgba(0, 0, 0, 0.4);
-	display: flex;
+	display: none;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;

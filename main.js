@@ -105,6 +105,7 @@ function start() {
 	score.style.display = 'block';
 	topScore.style.display = 'block';
 	topScore.childNodes[3].innerText = savedData.score;
+	meteorScores.style.display = 'flex';
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 
