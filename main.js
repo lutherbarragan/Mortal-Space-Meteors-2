@@ -48,7 +48,7 @@ const meteorScore = {
 };
 const meteorTypes = [
 	{
-		width: 100,
+		width: 150,
 		speed: 8,
 		hp: 2,
 		value: 1000,
@@ -62,7 +62,7 @@ const meteorTypes = [
 		size: 'md',
 	},
 	{
-		width: 400,
+		width: 350,
 		speed: 2,
 		hp: 6,
 		value: 5000,
