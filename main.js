@@ -104,7 +104,7 @@ function start() {
 	timer.style.top = '50px';
 	scores.style.display = 'block';
 	topScore.style.display = 'block';
-	topScore.innerText = savedData.score;
+	topScore.innerText = `${savedData.score.toLocaleString('en-US')}`;
 	meteorScores.style.display = 'flex';
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
@@ -124,7 +124,7 @@ function update() {
 		savedData.time = time;
 		savedData.meteors = { ...meteorScore };
 
-		topScore.innerText = savedData.score;
+		topScore.innerText = `${savedData.score.toLocaleString('en-US')}`;
 
 		localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
 	}
@@ -149,7 +149,7 @@ function update() {
 	}
 
 	// 0.01 second (fps speed)
-	score.innerText = `${player1.score}`;
+	score.innerText = `${player1.score.toLocaleString('en-US')}`;
 	lgScore.childNodes[1].innerText = meteorScore.lg;
 	mdScore.childNodes[1].innerText = meteorScore.md;
 	smScore.childNodes[1].innerText = meteorScore.sm;
