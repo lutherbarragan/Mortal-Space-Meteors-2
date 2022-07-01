@@ -46,9 +46,8 @@ body {
 }
 
 #timer,
-#score,
-#meteor-scores,
-#topScore {
+#scores,
+#meteor-scores {
 	color: white;
 	font-size: 40px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -60,21 +59,23 @@ body {
 	display: block;
 }
 
-#score {
-	top: 10px;
-	left: 10px;
+#scores {
+	display: block;
 }
 
 #topScore {
 	width: 200px;
-	height: 50px;
-	padding-top: 3px;
-	font-size: 20px;
-	text-align: center;
-	top: 0;
-	right: 0;
-	background-color: #2d58a8;
-	border-bottom-left-radius: 30px;
+	padding: 0 25px 0 10px;
+	border-bottom-right-radius: 20px;
+	background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
+}
+
+#score {
+	width: 70%;
+	padding: 0 25px 0 10px;
+	font-size: 25px;
+	background-image: linear-gradient(315deg, #990000 0%, #ff0000 74%);
+	border-bottom-right-radius: 50px;
 }
 
 #topScore:hover {
@@ -90,10 +91,11 @@ body {
 	width: 100px;
 	height: 300px;
 	top: 10vh;
-	padding: 20px 20px 20px 0;
+	right: 0;
+	padding: 20px 0;
 	border: 4px solid black;
-	border-top-right-radius: 50px;
-	border-bottom-right-radius: 50px;
+	border-top-left-radius: 50px;
+	border-bottom-left-radius: 50px;
 }
 
 .meteor-score {
