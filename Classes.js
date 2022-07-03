@@ -39,7 +39,6 @@ class Player {
 	moveUp = () => {
 		if (this.y - this.height < 0) return;
 
-		// this.gravity = 0;
 		let distanceTravelled = 0;
 
 		let moveUpIntr = setInterval(() => {
@@ -48,15 +47,12 @@ class Player {
 
 			if (distanceTravelled >= this.height) {
 				clearInterval(moveUpIntr);
-				// setTimeout(() => {
-				// 	this.gravity = 2;
-				// }, 25);
 			}
 		}, 1);
 	};
 
 	moveDown = () => {
-		if (player1.y + player1.height >= canvas.height) return;
+		if (this.y + this.height * 2 >= canvas.height) return;
 
 		let distanceTravelled = 0;
 		let moveDownIntr = setInterval(() => {
