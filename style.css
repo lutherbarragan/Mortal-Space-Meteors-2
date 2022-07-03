@@ -139,6 +139,22 @@ body {
 	transform: translate(-50%, -50%);
 }
 
+#playAgain {
+	font-size: 40px;
+	background-color: #990000;
+	color: white;
+	border: none;
+	border-radius: 20px;
+	padding: 10px 20px;
+	transition: all 0.2s;
+}
+
+#playAgain:hover {
+	cursor: pointer;
+	background-color: #d00000;
+	transform: translateY(-5px);
+}
+
 .smooth {
 	transition: all 2s;
 	border: 5px solid red;

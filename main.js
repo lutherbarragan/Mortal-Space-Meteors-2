@@ -9,6 +9,7 @@ const mdScore = document.getElementById('md');
 const smScore = document.getElementById('sm');
 const meteorScores = document.getElementById('meteor-scores');
 const pauseScreen = document.getElementById('pause-screen');
+const playAgain = document.getElementById('playAgain');
 
 let mainInterval;
 let meteorSpawner;
@@ -179,9 +180,12 @@ function update() {
 
 		let gameOver = `
             <p>GAME OVER</p>
-            <p>Refresh page to play again</p>
+            <button id="playAgain">Play again</button>
         `;
 		pauseScreen.innerHTML = gameOver;
+
+		const playAgain = document.getElementById('playAgain');
+		playAgain.addEventListener('click', () => window.location.reload());
 	}
 }
 
