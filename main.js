@@ -33,7 +33,7 @@ canvas.height = BODY.offsetHeight;
 // let extraSpeed = 0;
 const imgs = {
 	background: 'src/SPACE_HORIZON.png',
-	player1: 'src/SHIP_P1.png',
+	player1: 'src/SHIP1/Spaceship.png',
 	meteor: 'src/METEOR.png',
 };
 
@@ -110,7 +110,7 @@ function start() {
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 
-	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 }
 
@@ -137,7 +137,7 @@ function update() {
 		if (spawnSpeed > 300) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 7;
-			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 			// console.log(spawnSpeed);
 		}
 	}

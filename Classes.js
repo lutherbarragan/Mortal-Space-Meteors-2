@@ -17,7 +17,7 @@ class Board {
 
 class Player {
 	constructor(x, y) {
-		this.width = 50;
+		this.width = 150;
 		this.height = 50;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
@@ -26,6 +26,7 @@ class Player {
 		this.img.onload = this.draw;
 		this.gravity = 2;
 		this.moveSpeed = 2;
+		this.moveDistance = 50;
 		this.score = 0;
 		this.type = 'player';
 	}
@@ -38,7 +39,7 @@ class Player {
 	moveUp = () => {
 		if (this.y - this.height < 0) return;
 
-		this.gravity = 0;
+		// this.gravity = 0;
 		let distanceTravelled = 0;
 
 		let moveUpIntr = setInterval(() => {
@@ -47,9 +48,9 @@ class Player {
 
 			if (distanceTravelled >= this.height) {
 				clearInterval(moveUpIntr);
-				setTimeout(() => {
-					this.gravity = 2;
-				}, 25);
+				// setTimeout(() => {
+				// 	this.gravity = 2;
+				// }, 25);
 			}
 		}, 1);
 	};
@@ -69,15 +70,19 @@ class Player {
 	};
 
 	moveLeft = () => {
-		if (player1.x - player1.width < 0) return;
+		if (player1.x - player1.width <= 0) return;
 
+		this.gravity = 0;
 		let distanceTravelled = 0;
-		let moveDownIntr = setInterval(() => {
+		let moveLeftIntr = setInterval(() => {
 			this.x -= this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.width) {
-				clearInterval(moveDownIntr);
+			if (distanceTravelled >= this.moveDistance) {
+				clearInterval(moveLeftIntr);
+				setTimeout(() => {
+					this.gravity = 2;
+				}, 25);
 			}
 		}, 1);
 	};
@@ -85,13 +90,17 @@ class Player {
 	moveRight = () => {
 		if (player1.x + player1.width >= canvas.width - player1.width) return;
 
+		this.gravity = 0;
 		let distanceTravelled = 0;
-		let moveDownIntr = setInterval(() => {
+		let moveRightIntr = setInterval(() => {
 			this.x += this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.width) {
-				clearInterval(moveDownIntr);
+			if (distanceTravelled >= this.moveDistance) {
+				clearInterval(moveRightIntr);
+				setTimeout(() => {
+					this.gravity = 2;
+				}, 25);
 			}
 		}, 1);
 	};
