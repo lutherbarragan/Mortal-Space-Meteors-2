@@ -32,7 +32,7 @@ class Player {
 
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		this.y += this.gravity;
+		this.x -= this.gravity;
 	};
 
 	moveUp = () => {
@@ -102,8 +102,8 @@ class Meteor {
 		this.id = Date.now();
 		this.width = props.width;
 		this.height = props.width;
-		this.x = Math.floor(Math.random() * canvas.width);
-		this.y = 0 - this.height;
+		this.x = canvas.width + this.width;
+		this.y = Math.floor(Math.random() * canvas.height);
 		this.img = new Image();
 		this.img.src = imgs.meteor;
 		this.img.onload = this.draw;
@@ -117,7 +117,7 @@ class Meteor {
 	draw = () => {
 		if (this.hp > 0) {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			this.y += this.speed;
+			this.x -= this.speed;
 		}
 	};
 
