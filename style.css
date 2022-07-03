@@ -60,7 +60,7 @@ body {
 }
 
 #scores {
-	display: block;
+	display: none;
 }
 
 #topScore {
