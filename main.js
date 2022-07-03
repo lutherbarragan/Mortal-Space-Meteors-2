@@ -32,7 +32,7 @@ canvas.height = BODY.offsetHeight;
 
 // let extraSpeed = 0;
 const imgs = {
-	background: 'src/SPACE_BACKGROUND.png',
+	background: 'src/SPACE_HORIZON.png',
 	player1: 'src/SHIP_P1.png',
 	meteor: 'src/METEOR.png',
 };
