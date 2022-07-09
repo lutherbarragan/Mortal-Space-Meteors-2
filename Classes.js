@@ -144,8 +144,8 @@ class Meteor {
 class Bullet {
 	constructor(x, y) {
 		this.id = Date.now();
-		this.width = 6;
-		this.height = 18;
+		this.width = 18;
+		this.height = 6;
 		this.x = x;
 		this.y = y;
 		this.damage = 1;
@@ -157,7 +157,7 @@ class Bullet {
 		if (this.allowToDraw) {
 			ctx.fillStyle = `rgb(255, 255, 255)`;
 			ctx.fillRect(this.x, this.y, this.width, this.height);
-			this.y -= 8;
+			this.x += 8;
 		}
 	};
 }

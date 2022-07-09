@@ -3,7 +3,7 @@ window.addEventListener('load', () => {
 	if (!localStorage.getItem('MSM2TopScore')) localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
 });
 
-addEventListener('keydown', (e) => {
+addEventListener('keydown', e => {
 	// GAME EVENTS
 	if (e.keyCode == 13) {
 		if (isRunning) stop();
@@ -18,8 +18,8 @@ addEventListener('keydown', (e) => {
 		if (e.keyCode == 87) player1.moveUp();
 		if (e.keyCode == 83) player1.moveDown();
 		if (e.keyCode == 32) {
-			const x = player1.x + player1.width / 2;
-			const y = player1.y;
+			const x = player1.x + player1.width - 10;
+			const y = player1.y + player1.height / 2;
 
 			bullets.push(new Bullet(x, y));
 		}
