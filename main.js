@@ -53,6 +53,7 @@ const meteorTypes = [
 		speed: 8,
 		hp: 2,
 		value: 10,
+		pushback: 50,
 		size: 'sm',
 	},
 	{
@@ -60,6 +61,7 @@ const meteorTypes = [
 		speed: 5,
 		hp: 4,
 		value: 50,
+		pushback: 80,
 		size: 'md',
 	},
 	{
@@ -67,6 +69,7 @@ const meteorTypes = [
 		speed: 2,
 		hp: 6,
 		value: 100,
+		pushback: 100,
 		size: 'lg',
 	},
 ];
@@ -81,7 +84,9 @@ function checkMeteorsCollitions(unit) {
 	meteors.forEach(meteor => {
 		if (meteor.hp > 0) {
 			if (meteor.checkCollition(unit)) {
-				if (unit.type == 'player') unit.y += 80;
+				if (unit.type == 'player') {
+					unit.getPushedBack(meteor.pushback);
+				}
 
 				if (unit.type == 'bullet') {
 					unit.allowToDraw = false;

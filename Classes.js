@@ -100,6 +100,8 @@ class Player {
 			}
 		}, 1);
 	};
+
+	getPushedBack = pushback => (this.x -= pushback);
 }
 
 class Meteor {
@@ -115,6 +117,7 @@ class Meteor {
 		this.speed = props.speed;
 		this.hp = props.hp;
 		this.value = props.value;
+		this.pushback = props.pushback;
 		this.size = props.size;
 		this.type = 'obstacle';
 	}
