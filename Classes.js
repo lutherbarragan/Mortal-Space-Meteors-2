@@ -137,7 +137,7 @@ class Meteor {
 
 	takeDamage = damage => {
 		this.hp -= damage;
-		this.y -= 15;
+		this.x += 15;
 	};
 }
 

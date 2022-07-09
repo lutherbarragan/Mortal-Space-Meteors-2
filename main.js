@@ -110,7 +110,7 @@ function start() {
 	timer.innerText = time;
 	pauseScreen.style.display = 'none';
 
-	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 }
 
@@ -137,7 +137,7 @@ function update() {
 		if (spawnSpeed > 300) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 7;
-			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 			// console.log(spawnSpeed);
 		}
 	}
