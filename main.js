@@ -117,7 +117,7 @@ function start() {
 	topScore.style.display = 'block';
 	topScore.innerText = `${savedData.score.toLocaleString('en-US')}`;
 	meteorScores.style.display = 'flex';
-	timer.innerText = time;
+	timer.innerText = '0:00';
 	pauseScreen.style.display = 'none';
 
 	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
@@ -143,7 +143,12 @@ function update() {
 	// 1 second
 	if (frames % 100 == 0) {
 		time++;
-		timer.innerText = time;
+		let mins = Math.floor(time / 60);
+		let secs = time % 60;
+
+		if (secs < 10) secs = `0${secs}`;
+
+		timer.innerText = `${mins}:${secs}`;
 		if (spawnSpeed > 300) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 7;
