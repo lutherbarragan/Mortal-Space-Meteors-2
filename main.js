@@ -34,7 +34,12 @@ canvas.height = BODY.offsetHeight;
 const imgs = {
 	background: 'src/SPACE_HORIZON.png',
 	player1: 'src/SHIP1/Spaceship.png',
-	meteor: 'src/METEOR.png',
+	meteor: {
+		default: 'src/Meteor/METEOR.png',
+		white: 'src/Meteor/METEOR_White_Frame.png',
+		red: 'src/Meteor/METEOR_Red_Frame.png',
+		redTransparent: 'src/Meteor/METEOR_Red_Transparent_Frame.png',
+	},
 };
 
 // instances
@@ -66,8 +71,8 @@ const meteorTypes = [
 	},
 	{
 		width: 350,
-		speed: 2,
-		hp: 6,
+		speed: 1,
+		hp: 30,
 		value: 100,
 		pushback: 100,
 		size: 'lg',
@@ -126,7 +131,7 @@ function update() {
 	if (frames % 10 == 0) player1.score += 1;
 
 	if (savedData.score < player1.score) {
-		savedData.score = player1.score;
+		savedData.score = player1.score; // [FEATURE] Add animation when top score is changing
 		savedData.time = time;
 		savedData.meteors = { ...meteorScore };
 
@@ -166,6 +171,7 @@ function update() {
 	//  (Re) Draw new content
 	board.draw();
 
+	// [FEATURE] Add life score
 	checkMeteorsCollitions(player1);
 
 	player1.draw();
@@ -180,8 +186,9 @@ function update() {
 
 	bullets.forEach(bullet => bullet.draw());
 
-	if (player1.y > canvas.height) {
-		stop();
+	// [BUG] Possible bug: Should only substrack HALF of the player's total width
+	if (player1.x < 0 - player1.width) {
+		// stop(); disabled while in develpment
 
 		let gameOver = `
             <p>GAME OVER</p>

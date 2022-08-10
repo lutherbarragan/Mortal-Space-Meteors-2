@@ -112,7 +112,7 @@ class Meteor {
 		this.x = canvas.width + this.width;
 		this.y = Math.floor(Math.random() * canvas.height);
 		this.img = new Image();
-		this.img.src = imgs.meteor;
+		this.img.src = imgs.meteor.default;
 		this.img.onload = this.draw;
 		this.speed = props.speed;
 		this.hp = props.hp;
@@ -141,6 +141,24 @@ class Meteor {
 	takeDamage = damage => {
 		this.hp -= damage;
 		this.x += 15;
+
+		this.damageEffect();
+	};
+
+	damageEffect = () => {
+		this.img.src = imgs.meteor.white;
+
+		setTimeout(() => {
+			this.img.src = imgs.meteor.red;
+		}, 15);
+
+		setTimeout(() => {
+			this.img.src = imgs.meteor.redTransparent;
+		}, 25);
+
+		setTimeout(() => {
+			this.img.src = imgs.meteor.default;
+		}, 80);
 	};
 }
 
