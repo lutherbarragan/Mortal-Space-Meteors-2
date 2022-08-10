@@ -71,8 +71,8 @@ const meteorTypes = [
 	},
 	{
 		width: 350,
-		speed: 1,
-		hp: 30,
+		speed: 2,
+		hp: 8,
 		value: 100,
 		pushback: 100,
 		size: 'lg',
