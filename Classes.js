@@ -48,7 +48,7 @@ class Player {
 			if (distanceTravelled >= this.height) {
 				clearInterval(moveUpIntr);
 			}
-		}, 1);
+		}, 6);
 	};
 
 	moveDown = () => {
@@ -62,7 +62,7 @@ class Player {
 			if (distanceTravelled >= this.height) {
 				clearInterval(moveDownIntr);
 			}
-		}, 1);
+		}, 6);
 	};
 
 	moveLeft = () => {
@@ -80,7 +80,7 @@ class Player {
 					this.gravity = 2;
 				}, 25);
 			}
-		}, 1);
+		}, 6);
 	};
 
 	moveRight = () => {
@@ -98,7 +98,7 @@ class Player {
 					this.gravity = 2;
 				}, 25);
 			}
-		}, 1);
+		}, 6);
 	};
 
 	getPushedBack = pushback => (this.x -= pushback);
