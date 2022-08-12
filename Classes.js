@@ -33,7 +33,7 @@ class Player {
 
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		this.x -= this.gravity;
+		// this.x -= this.gravity;
 	};
 
 	moveUp = () => {
@@ -168,7 +168,7 @@ class Bullet {
 		this.width = 18;
 		this.height = 6;
 		this.x = x;
-		this.y = y;
+		this.y = y + Math.random() * 10;
 		this.damage = 1;
 		this.allowToDraw = true;
 		this.type = 'bullet';
