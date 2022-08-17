@@ -14,6 +14,18 @@ const playAgain = document.getElementById('playAgain');
 let mainInterval;
 let meteorSpawner;
 let time = 0;
+let _1second = 100;
+
+const COOLDOWNS = {
+	shooting: {
+		default: {
+			numberOfInstances: 2,
+			currentInstance: 0,
+			instanceSpeed: 0.25,
+		},
+	},
+};
+
 let isRunning = false;
 let frames = 0;
 let spawnSpeed = 800;
@@ -140,8 +152,18 @@ function update() {
 		localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
 	}
 
+	// COOLDOWNS //
+
+	// 0.25 of a second
+	if (frames % 25 == 0) {
+		console.log('instance:', COOLDOWNS.shooting.default.currentInstance);
+		// console.log(frames);
+
+		if (COOLDOWNS.shooting.default.currentInstance > 0) COOLDOWNS.shooting.default.currentInstance -= 1;
+	}
+
 	// 1 second
-	if (frames % 100 == 0) {
+	if (frames % _1second == 0) {
 		time++;
 		let mins = Math.floor(time / 60);
 		let secs = time % 60;

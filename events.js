@@ -18,10 +18,15 @@ addEventListener('keydown', e => {
 		if (e.keyCode == 87) player1.moveUp();
 		if (e.keyCode == 83) player1.moveDown();
 		if (e.keyCode == 32) {
-			const x = player1.x + player1.width * 0.85;
-			const y = player1.y + player1.height / 2;
+			// [FIX]
+			if (COOLDOWNS.shooting.default.currentInstance <= 0) {
+				const x = player1.x + player1.width * 0.85;
+				const y = player1.y + player1.height / 2;
 
-			bullets.push(new Bullet(x, y));
+				bullets.push(new Bullet(x, y));
+				COOLDOWNS.shooting.default.currentInstance = COOLDOWNS.shooting.default.numberOfInstances;
+			}
+			// [FIX]
 		}
 	}
 });
