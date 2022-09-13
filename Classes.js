@@ -28,6 +28,7 @@ class Player {
 		this.moveSpeed = 2;
 		this.moveDistance = 50;
 		this.score = 0;
+		this.weapon = 'default';
 		this.type = 'player';
 	}
 
@@ -99,6 +100,16 @@ class Player {
 				}, 25);
 			}
 		}, 6);
+	};
+
+	shoot = () => {
+		const x = this.x + this.width * 0.85;
+		const y = this.y + this.height / 2;
+
+		bullets.push(new Bullet(x, y));
+
+		WEAPONS.default.isReady = false;
+		WEAPONS.default.count = WEAPONS.default.attackSpeed;
 	};
 
 	getPushedBack = pushback => (this.x -= pushback);

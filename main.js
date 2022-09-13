@@ -16,13 +16,17 @@ let meteorSpawner;
 let time = 0;
 let _1second = 100;
 
-const COOLDOWNS = {
-	shooting: {
-		default: {
-			numberOfInstances: 2,
-			currentInstance: 0,
-			instanceSpeed: 0.25,
-		},
+const WEAPONS = {
+	default: {
+		isReady: true,
+		attackSpeed: 50, //half a second
+		count: 0,
+	},
+	shotgun: {
+		isReady: true,
+		defaultAttackSpeed: 50,
+		currentAttackSpeed: 50,
+		count: 0,
 	},
 };
 
@@ -119,6 +123,26 @@ function checkMeteorsCollitions(unit) {
 	});
 }
 
+function checkCooldowns() {
+	// WEAPONS
+	if (!WEAPONS.default.isReady) reduceCountByOne('default');
+	//	if (!WEAPONS.shotgun.isReady)
+	//	if (!WEAPONS.laser.isReady)
+	//	..
+	//	..
+	//	..
+}
+
+function reduceCountByOne(type) {
+	WEAPONS[type].count--;
+	// console.log(WEAPONS[type].count);
+
+	if (WEAPONS[type].count === 0) {
+		WEAPONS[type].isReady = true;
+		// console.log('READY TO SHOOT!!');
+	}
+}
+
 // Main Functions
 function start() {
 	savedData = JSON.parse(localStorage.getItem('MSM2TopScore'));
@@ -139,6 +163,9 @@ function start() {
 function update() {
 	frames++;
 
+	checkCooldowns();
+	// ...
+
 	// 10 points per second
 	if (frames % 10 == 0) player1.score += 1;
 
@@ -150,16 +177,6 @@ function update() {
 		topScore.innerText = `${savedData.score.toLocaleString('en-US')}`;
 
 		localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
-	}
-
-	// COOLDOWNS //
-
-	// 0.25 of a second
-	if (frames % 25 == 0) {
-		console.log('instance:', COOLDOWNS.shooting.default.currentInstance);
-		// console.log(frames);
-
-		if (COOLDOWNS.shooting.default.currentInstance > 0) COOLDOWNS.shooting.default.currentInstance -= 1;
 	}
 
 	// 1 second
