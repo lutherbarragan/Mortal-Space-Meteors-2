@@ -57,6 +57,9 @@ const imgs = {
 		red: 'src/Meteor/METEOR_Red_Frame.png',
 		redTransparent: 'src/Meteor/METEOR_Red_Transparent_Frame.png',
 	},
+	bullets: {
+		default: 'src/bullet.png',
+	},
 };
 
 // instances

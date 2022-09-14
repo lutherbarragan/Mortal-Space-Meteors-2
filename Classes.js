@@ -181,10 +181,13 @@ class Meteor {
 class Bullet {
 	constructor(x, y) {
 		this.id = Date.now();
-		this.width = 18;
-		this.height = 6;
+		this.width = 12;
+		this.height = 12;
 		this.x = x;
 		this.y = y + Math.random() * 10;
+		this.img = new Image();
+		this.img.src = imgs.bullets.default;
+		this.img.onload = this.draw;
 		this.damage = 1;
 		this.allowToDraw = true;
 		this.type = 'bullet';
@@ -192,9 +195,8 @@ class Bullet {
 
 	draw = () => {
 		if (this.allowToDraw) {
-			ctx.fillStyle = `rgb(255, 255, 255)`;
-			ctx.fillRect(this.x, this.y, this.width, this.height);
-			this.x += 8;
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			this.x += 10;
 		}
 	};
 }
