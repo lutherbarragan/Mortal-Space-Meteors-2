@@ -71,25 +71,25 @@ const meteorScore = {
 };
 const meteorTypes = [
 	{
-		width: 150,
-		speed: 8,
+		width: 100,
+		speed: 6,
 		hp: 2,
 		value: 10,
 		pushback: 50,
 		size: 'sm',
 	},
 	{
-		width: 250,
-		speed: 5,
-		hp: 4,
+		width: 150,
+		speed: 4,
+		hp: 3,
 		value: 50,
 		pushback: 80,
 		size: 'md',
 	},
 	{
-		width: 350,
+		width: 200,
 		speed: 2,
-		hp: 8,
+		hp: 4,
 		value: 100,
 		pushback: 100,
 		size: 'lg',
