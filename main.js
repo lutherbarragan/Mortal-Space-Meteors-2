@@ -16,6 +16,7 @@ let meteorSpawner;
 let time = 0;
 let _1second = 100;
 
+//FIND A BETTER WAY TO STORE THIS DATA
 const WEAPONS = {
 	default: {
 		isReady: true,

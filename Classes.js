@@ -11,7 +11,12 @@ class Board {
 	}
 
 	draw = () => {
+		if (this.x <= -this.width) this.x = 0;
+
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		ctx.drawImage(this.img, this.x + this.width, this.y, this.width, this.height);
+
+		this.x -= 1;
 	};
 }
 
