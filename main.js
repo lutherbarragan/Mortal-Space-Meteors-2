@@ -189,11 +189,11 @@ function update() {
 		if (secs < 10) secs = `0${secs}`;
 
 		timer.innerText = `${mins}:${secs}`;
-		if (spawnSpeed > 300) {
+		if (spawnSpeed > 400) {
 			clearInterval(meteorSpawner);
-			spawnSpeed -= 7;
+			spawnSpeed -= 5;
+			console.log(spawnSpeed);
 			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
-			// console.log(spawnSpeed);
 		}
 	}
 	// 10 seconds
