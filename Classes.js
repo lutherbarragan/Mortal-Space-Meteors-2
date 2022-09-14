@@ -200,3 +200,32 @@ class Bullet {
 		}
 	};
 }
+
+class ShotgunIcon {
+	constructor() {
+		this.id = Date.now();
+		this.width = 48;
+		this.height = 48;
+		this.x = canvas.width + this.width;
+		this.y = Math.floor(Math.random() * canvas.height);
+		this.img = new Image();
+		this.img.src = imgs.enhancers.shotgun;
+		this.img.onload = this.draw;
+		this.speed = 4;
+		this.type = 'enhancer';
+	}
+
+	draw = () => {
+		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+		this.x -= this.speed;
+	};
+
+	checkCollition = unit => {
+		return (
+			this.x < unit.x + unit.width &&
+			this.x + this.width > unit.x &&
+			this.y < unit.y + unit.height &&
+			this.y + this.height > unit.y
+		);
+	};
+}

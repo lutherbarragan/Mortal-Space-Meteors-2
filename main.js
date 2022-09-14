@@ -60,6 +60,9 @@ const imgs = {
 	bullets: {
 		default: 'src/bullet.png',
 	},
+	enhancers: {
+		shotgun: 'src/shotgunIcon.png',
+	},
 };
 
 // instances
@@ -147,6 +150,8 @@ function reduceCountByOne(type) {
 	}
 }
 
+const SHOTGUN_ICON = new ShotgunIcon();
+
 // Main Functions
 function start() {
 	savedData = JSON.parse(localStorage.getItem('MSM2TopScore'));
@@ -233,6 +238,8 @@ function update() {
 	});
 
 	bullets.forEach(bullet => bullet.draw());
+
+	if (frames > 500) SHOTGUN_ICON.draw();
 
 	// [BUG] Possible bug: Should only substrack HALF of the player's total width
 	if (player1.x < 0 - player1.width) {
