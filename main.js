@@ -18,7 +18,12 @@ let _1second = 100;
 let isRunning = false;
 let frames = 0;
 let spawnSpeed = 800;
-let savedData = {
+let currentUpgrade = {
+	allowToDraw: false,
+	instance: {},
+};
+
+let global_data = {
 	score: 0,
 	time: 0,
 	meteors: {
@@ -27,6 +32,19 @@ let savedData = {
 		sm: 0,
 	},
 };
+const UPGRADES_DATA = [
+	{
+		name: 'shotgun',
+		img: 'src/upgrades/shotgun_icon.png',
+		attackSpeed: 50,
+		width: 24,
+		height: 24,
+	},
+	{
+		name: 'shield',
+		img: 'src/upgrades/shield_icon.png',
+	},
+];
 
 canvas.width = BODY.offsetWidth;
 canvas.height = BODY.offsetHeight;
@@ -127,18 +145,23 @@ function reduceCooldownCount(unit, action) {
 	}
 }
 
-//FIX**: SHOULD BE INSIDE ARRAY (code for activator items should work the same as the meteor code, inside an array);
-const SHOTGUN_ICON = new ShotgunIcon();
+function spawnUpgrade() {
+	const i = Math.floor(Math.floor(Math.random() * UPGRADES_DATA.length));
+	const data = UPGRADES_DATA[i];
+
+	currentUpgrade.allowToDraw = true;
+	currentUpgrade.instance = new Upgrade(data);
+}
 
 // Main Functions
 function start() {
-	savedData = JSON.parse(localStorage.getItem('MSM2TopScore'));
+	global_data = JSON.parse(localStorage.getItem('MSM2TopScore'));
 
 	isRunning = true;
 	timer.style.top = '50px';
 	scores.style.display = 'block';
 	topScore.style.display = 'block';
-	topScore.innerText = `${savedData.score.toLocaleString('en-US')}`;
+	topScore.innerText = `${global_data.score.toLocaleString('en-US')}`;
 	meteorScores.style.display = 'flex';
 	timer.innerText = '0:00';
 	pauseScreen.style.display = 'none';
@@ -156,14 +179,14 @@ function update() {
 	// 10 points per second
 	if (frames % 10 == 0) player1.score += 1;
 
-	if (savedData.score < player1.score) {
-		savedData.score = player1.score; // [FEATURE] Add animation when top score is changing
-		savedData.time = time;
-		savedData.meteors = { ...meteorScore };
+	if (global_data.score < player1.score) {
+		global_data.score = player1.score; // [FEATURE] Add animation when top score is changing
+		global_data.time = time;
+		global_data.meteors = { ...meteorScore };
 
-		topScore.innerText = `${savedData.score.toLocaleString('en-US')}`;
+		topScore.innerText = `${global_data.score.toLocaleString('en-US')}`;
 
-		localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
+		localStorage.setItem('MSM2TopScore', JSON.stringify(global_data));
 	}
 
 	// 1 second
@@ -178,16 +201,8 @@ function update() {
 		if (spawnSpeed > 400) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 5;
-			console.log(spawnSpeed);
 			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 		}
-	}
-	// 10 seconds
-	if (frames % 4000 == 0) {
-		// more speed (?)
-		// extraSpeed++;
-		// console.log(extraSpeed);
-		// meteorTypes.forEach((meteor) => (meteor.speed += extraSpeed));
 	}
 
 	// 0.01 second (fps speed)
@@ -218,7 +233,8 @@ function update() {
 	bullets.forEach(bullet => bullet.draw());
 
 	//FIX**
-	if (frames > 500) SHOTGUN_ICON.draw();
+	if (frames % 1000 == 0) spawnUpgrade();
+	if (currentUpgrade.allowToDraw) currentUpgrade.instance.draw();
 
 	// [BUG] Possible bug: Should only substrack HALF of the player's total width
 	if (player1.x < 0 - player1.width) {

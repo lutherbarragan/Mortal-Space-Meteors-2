@@ -207,18 +207,19 @@ class Bullet {
 }
 
 //RENAME
-class ShotgunIcon {
-	constructor() {
+class Upgrade {
+	constructor(data) {
+		this.name = data.name;
 		this.id = Date.now();
 		this.width = 48;
 		this.height = 48;
 		this.x = canvas.width + this.width;
 		this.y = Math.floor(Math.random() * canvas.height);
 		this.img = new Image();
-		this.img.src = imgs.enhancers.shotgun;
+		this.img.src = data.img;
 		this.img.onload = this.draw;
 		this.speed = 4;
-		this.type = 'enhancer';
+		this.type = 'upgrade';
 	}
 
 	draw = () => {
