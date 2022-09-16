@@ -32,13 +32,16 @@ class Player {
 		this.gravity = 2;
 		this.moveSpeed = 2;
 		this.moveDistance = 25;
-		this.shooting = {
+		this.weapon = {
+			type: 'default',
 			attackSpeed: 35,
 			cooldownCount: 0,
 			isReady: true,
 		};
+		this.defense = {
+			type: 'none',
+		};
 		this.score = 0;
-		this.weapon = 'default';
 		this.type = 'player';
 	}
 
@@ -118,8 +121,8 @@ class Player {
 
 		bullets.push(new Bullet(x, y));
 
-		this.shooting.isReady = false;
-		this.shooting.cooldownCount = this.shooting.attackSpeed;
+		this.weapon.isReady = false;
+		this.weapon.cooldownCount = this.weapon.attackSpeed;
 	};
 
 	getPushedBack = pushback => (this.x -= pushback);

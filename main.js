@@ -35,6 +35,7 @@ let global_data = {
 const UPGRADES_DATA = [
 	{
 		name: 'shotgun',
+		type: 'weapon',
 		img: 'src/upgrades/shotgun_icon.png',
 		attackSpeed: 50,
 		width: 24,
@@ -42,6 +43,7 @@ const UPGRADES_DATA = [
 	},
 	{
 		name: 'shield',
+		type: 'defense',
 		img: 'src/upgrades/shield_icon.png',
 	},
 ];
@@ -132,9 +134,16 @@ function checkMeteorsCollitions(unit) {
 	});
 }
 
+function checkUpgradeCollition(player) {
+	if (currentUpgrade.instance.checkCollition(player)) {
+		currentUpgrade.allowToDraw = false;
+		currentUpgrade.instance = {};
+	}
+}
+
 function checkCooldowns() {
 	// All cooldowns
-	if (!player1.shooting.isReady) reduceCooldownCount(player1, 'shooting');
+	if (!player1.weapon.isReady) reduceCooldownCount(player1, 'weapon');
 }
 
 function reduceCooldownCount(unit, action) {
@@ -148,6 +157,8 @@ function reduceCooldownCount(unit, action) {
 function spawnUpgrade() {
 	const i = Math.floor(Math.floor(Math.random() * UPGRADES_DATA.length));
 	const data = UPGRADES_DATA[i];
+
+	//Create a condition to not spawn an UPGRADE that's already active in the player
 
 	currentUpgrade.allowToDraw = true;
 	currentUpgrade.instance = new Upgrade(data);
@@ -219,6 +230,7 @@ function update() {
 
 	// [FEATURE] Add life score
 	checkMeteorsCollitions(player1);
+	if (currentUpgrade.allowToDraw) checkUpgradeCollition(player1);
 
 	player1.draw();
 
