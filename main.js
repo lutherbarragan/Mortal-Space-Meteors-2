@@ -15,22 +15,6 @@ let mainInterval;
 let meteorSpawner;
 let time = 0;
 let _1second = 100;
-
-//FIND A BETTER WAY TO STORE THIS DATA
-const WEAPONS = {
-	default: {
-		isReady: true,
-		attackSpeed: 50, //half a second
-		count: 0,
-	},
-	shotgun: {
-		isReady: true,
-		defaultAttackSpeed: 50,
-		currentAttackSpeed: 50,
-		count: 0,
-	},
-};
-
 let isRunning = false;
 let frames = 0;
 let spawnSpeed = 800;
@@ -131,25 +115,19 @@ function checkMeteorsCollitions(unit) {
 }
 
 function checkCooldowns() {
-	// WEAPONS
-	if (!WEAPONS.default.isReady) reduceCountByOne('default');
-	//	if (!WEAPONS.shotgun.isReady)
-	//	if (!WEAPONS.laser.isReady)
-	//	..
-	//	..
-	//	..
+	// All cooldowns
+	if (!player1.shooting.isReady) reduceCooldownCount(player1, 'shooting');
 }
 
-function reduceCountByOne(type) {
-	WEAPONS[type].count--;
-	// console.log(WEAPONS[type].count);
+function reduceCooldownCount(unit, action) {
+	unit[action].cooldownCount--;
 
-	if (WEAPONS[type].count === 0) {
-		WEAPONS[type].isReady = true;
-		// console.log('READY TO SHOOT!!');
+	if (unit[action].cooldownCount === 0) {
+		unit[action].isReady = true;
 	}
 }
 
+//FIX**: SHOULD BE INSIDE ARRAY (code for activator items should work the same as the meteor code, inside an array);
 const SHOTGUN_ICON = new ShotgunIcon();
 
 // Main Functions
@@ -239,6 +217,7 @@ function update() {
 
 	bullets.forEach(bullet => bullet.draw());
 
+	//FIX**
 	if (frames > 500) SHOTGUN_ICON.draw();
 
 	// [BUG] Possible bug: Should only substrack HALF of the player's total width

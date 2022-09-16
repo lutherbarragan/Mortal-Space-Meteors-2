@@ -31,7 +31,12 @@ class Player {
 		this.img.onload = this.draw;
 		this.gravity = 2;
 		this.moveSpeed = 2;
-		this.moveDistance = 50;
+		this.moveDistance = 25;
+		this.shooting = {
+			attackSpeed: 35,
+			cooldownCount: 0,
+			isReady: true,
+		};
 		this.score = 0;
 		this.weapon = 'default';
 		this.type = 'player';
@@ -113,8 +118,8 @@ class Player {
 
 		bullets.push(new Bullet(x, y));
 
-		WEAPONS.default.isReady = false;
-		WEAPONS.default.count = WEAPONS.default.attackSpeed;
+		this.shooting.isReady = false;
+		this.shooting.cooldownCount = this.shooting.attackSpeed;
 	};
 
 	getPushedBack = pushback => (this.x -= pushback);
@@ -201,6 +206,7 @@ class Bullet {
 	};
 }
 
+//RENAME
 class ShotgunIcon {
 	constructor() {
 		this.id = Date.now();

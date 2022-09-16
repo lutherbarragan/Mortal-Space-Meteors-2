@@ -17,7 +17,7 @@ addEventListener('keydown', e => {
 		if (e.keyCode == 87) player1.moveUp();
 		if (e.keyCode == 83) player1.moveDown();
 		if (e.keyCode == 32) {
-			if (WEAPONS.default.isReady) player1.shoot();
+			if (player1.shooting.isReady) player1.shoot();
 		}
 	}
 });
