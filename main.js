@@ -54,12 +54,12 @@ canvas.height = BODY.offsetHeight;
 // let extraSpeed = 0;
 const imgs = {
 	background: 'src/SPACE_HORIZON.png',
-	player1: 'src/SHIP1/Spaceship.png',
+	player1: 'src/ship/frame_00.png',
 	meteor: {
-		default: 'src/Meteor/METEOR.png',
-		white: 'src/Meteor/METEOR_White_Frame.png',
-		red: 'src/Meteor/METEOR_Red_Frame.png',
-		redTransparent: 'src/Meteor/METEOR_Red_Transparent_Frame.png',
+		default: 'src/meteor/METEOR.png',
+		white: 'src/meteor/METEOR_White_Frame.png',
+		red: 'src/meteor/METEOR_Red_Frame.png',
+		redTransparent: 'src/meteor/METEOR_Red_Transparent_Frame.png',
 	},
 	bullets: {
 		default: 'src/bullet.png',

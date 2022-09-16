@@ -22,8 +22,8 @@ class Board {
 
 class Player {
 	constructor(x, y) {
-		this.width = 150;
-		this.height = 50;
+		this.width = 64;
+		this.height = 64;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
 		this.img = new Image();
