@@ -11,12 +11,12 @@ class Board {
 	}
 
 	draw = () => {
-		if (this.x <= -this.width) this.x = 0;
+		if (this.y >= this.height) this.y = 0;
 
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		ctx.drawImage(this.img, this.x + this.width, this.y, this.width, this.height);
+		ctx.drawImage(this.img, this.x, this.y - this.height, this.width, this.height);
 
-		this.x -= 1;
+		this.y += 1;
 	};
 }
 
@@ -116,8 +116,8 @@ class Player {
 	};
 
 	shoot = () => {
-		const x = this.x + this.width * 0.85;
-		const y = this.y + this.height / 2;
+		const x = this.x + this.width / 2;
+		const y = this.y + this.height * 0;
 
 		bullets.push(new Bullet(x, y));
 
@@ -133,8 +133,8 @@ class Meteor {
 		this.id = Date.now();
 		this.width = props.width;
 		this.height = props.width;
-		this.x = canvas.width + this.width;
-		this.y = Math.floor(Math.random() * canvas.height);
+		this.x = Math.floor(Math.random() * canvas.width);
+		this.y = 0 - this.height;
 		this.img = new Image();
 		this.img.src = imgs.meteor.default;
 		this.img.onload = this.draw;
@@ -149,7 +149,7 @@ class Meteor {
 	draw = () => {
 		if (this.hp > 0) {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			this.x -= this.speed;
+			this.y += this.speed;
 		}
 	};
 
@@ -164,7 +164,7 @@ class Meteor {
 
 	takeDamage = damage => {
 		this.hp -= damage;
-		this.x += 15;
+		this.y -= 15;
 
 		this.damageEffect();
 	};
@@ -191,8 +191,8 @@ class Bullet {
 		this.id = Date.now();
 		this.width = 12;
 		this.height = 12;
-		this.x = x;
-		this.y = y + Math.random() * 10;
+		this.x = x - this.width / 2;
+		this.y = y;
 		this.img = new Image();
 		this.img.src = imgs.bullets.default;
 		this.img.onload = this.draw;
@@ -204,7 +204,7 @@ class Bullet {
 	draw = () => {
 		if (this.allowToDraw) {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			this.x += 10;
+			this.y -= 10;
 		}
 	};
 }
@@ -216,8 +216,8 @@ class Upgrade {
 		this.id = Date.now();
 		this.width = 48;
 		this.height = 48;
-		this.x = canvas.width + this.width;
-		this.y = Math.floor(Math.random() * canvas.height);
+		this.x = Math.floor(Math.random() * canvas.width);
+		this.y = 0 - this.height;
 		this.img = new Image();
 		this.img.src = data.img;
 		this.img.onload = this.draw;
@@ -227,7 +227,7 @@ class Upgrade {
 
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		this.x -= this.speed;
+		this.y += this.speed;
 	};
 
 	checkCollition = unit => {

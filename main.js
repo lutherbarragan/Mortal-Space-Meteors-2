@@ -162,6 +162,7 @@ function spawnUpgrade() {
 
 	currentUpgrade.allowToDraw = true;
 	currentUpgrade.instance = new Upgrade(data);
+	console.log(currentUpgrade);
 }
 
 // Main Functions
@@ -247,6 +248,11 @@ function update() {
 	//FIX**
 	if (frames % 1000 == 0) spawnUpgrade();
 	if (currentUpgrade.allowToDraw) currentUpgrade.instance.draw();
+	if (currentUpgrade.instance.y > canvas.height) {
+		currentUpgrade.allowToDraw = false;
+		currentUpgrade.instance = {};
+		console.log(currentUpgrade);
+	}
 
 	// [BUG] Possible bug: Should only substrack HALF of the player's total width
 	if (player1.x < 0 - player1.width) {
