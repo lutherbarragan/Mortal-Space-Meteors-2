@@ -26,12 +26,13 @@ class Player {
 		this.height = 64;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
+		this.frame = 0;
 		this.img = new Image();
-		this.img.src = imgs.player1;
+		this.img.src = imgs.player1[this.frame];
 		this.img.onload = this.draw;
 		this.gravity = 2;
 		this.moveSpeed = 2;
-		this.moveDistance = 25;
+		this.moveDistance = 50;
 		this.weapon = {
 			type: 'default',
 			attackSpeed: 35,
@@ -48,6 +49,14 @@ class Player {
 	draw = () => {
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		// this.x -= this.gravity;
+		if (isRunning && frames % 10 === 0) this.frameAnimation();
+	};
+
+	frameAnimation = () => {
+		if (this.frame === 3) this.frame = 0;
+		else this.frame++;
+
+		this.img.src = imgs.player1[this.frame];
 	};
 
 	moveUp = () => {
@@ -125,7 +134,7 @@ class Player {
 		this.weapon.cooldownCount = this.weapon.attackSpeed;
 	};
 
-	getPushedBack = pushback => (this.x -= pushback);
+	getPushedBack = pushback => (this.y += pushback);
 }
 
 class Meteor {

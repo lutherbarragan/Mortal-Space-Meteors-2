@@ -54,7 +54,7 @@ canvas.height = BODY.offsetHeight;
 // let extraSpeed = 0;
 const imgs = {
 	background: 'src/SPACE_HORIZON.png',
-	player1: 'src/ship/frame_00.png',
+	player1: ['src/ship/frame_00.png', 'src/ship/frame_01.png', 'src/ship/frame_02.png', 'src/ship/frame_03.png'],
 	meteor: {
 		default: 'src/meteor/METEOR.png',
 		white: 'src/meteor/METEOR_White_Frame.png',
