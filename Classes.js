@@ -31,8 +31,8 @@ class Player {
 		this.img.src = imgs.player1[this.frame];
 		this.img.onload = this.draw;
 		this.gravity = 2;
-		this.moveSpeed = 2;
-		this.moveDistance = 50;
+		this.moveSpeed = 3;
+		this.moveDistance = 100;
 		this.weapon = {
 			type: 'default',
 			attackSpeed: 35,
@@ -60,7 +60,7 @@ class Player {
 	};
 
 	moveUp = () => {
-		if (this.y - this.height < 0) return;
+		if (this.y - this.height <= 0) return;
 
 		let distanceTravelled = 0;
 
@@ -69,13 +69,15 @@ class Player {
 			distanceTravelled += this.moveSpeed;
 
 			if (distanceTravelled >= this.height) {
+				if (this.y - this.height <= 0) this.y = 0;
+
 				clearInterval(moveUpIntr);
 			}
 		}, 6);
 	};
 
 	moveDown = () => {
-		if (this.y + this.height * 2 >= canvas.height) return;
+		if (this.y + this.height >= canvas.height) return;
 
 		let distanceTravelled = 0;
 		let moveDownIntr = setInterval(() => {
@@ -83,14 +85,14 @@ class Player {
 			distanceTravelled += this.moveSpeed;
 
 			if (distanceTravelled >= this.height) {
+				if (this.y + this.height >= canvas.height) this.y = canvas.height - this.height;
+
 				clearInterval(moveDownIntr);
 			}
 		}, 6);
 	};
 
 	moveLeft = () => {
-		if (player1.x - player1.width <= 0) return;
-
 		this.gravity = 0;
 		let distanceTravelled = 0;
 		let moveLeftIntr = setInterval(() => {
@@ -99,6 +101,8 @@ class Player {
 
 			if (distanceTravelled >= this.moveDistance) {
 				clearInterval(moveLeftIntr);
+				if (this.x <= this.width / 2) this.x = canvas.width - this.width / 2;
+
 				setTimeout(() => {
 					this.gravity = 2;
 				}, 25);
@@ -107,8 +111,6 @@ class Player {
 	};
 
 	moveRight = () => {
-		if (player1.x + player1.width >= canvas.width - player1.width) return;
-
 		this.gravity = 0;
 		let distanceTravelled = 0;
 		let moveRightIntr = setInterval(() => {
@@ -116,6 +118,7 @@ class Player {
 			distanceTravelled += this.moveSpeed;
 
 			if (distanceTravelled >= this.moveDistance) {
+				if (this.x + this.width / 2 >= canvas.width) this.x = 0 - this.width / 2;
 				clearInterval(moveRightIntr);
 				setTimeout(() => {
 					this.gravity = 2;
