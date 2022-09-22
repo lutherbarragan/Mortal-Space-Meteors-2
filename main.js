@@ -54,7 +54,16 @@ canvas.height = BODY.offsetHeight;
 // let extraSpeed = 0;
 const imgs = {
 	background: 'src/SPACE_HORIZON.png',
-	player1: ['src/ship/frame_00.png', 'src/ship/frame_01.png', 'src/ship/frame_02.png', 'src/ship/frame_03.png'],
+	player1: {
+		idle: [
+			'src/ship/idle/frame_00.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
+			'src/ship/idle/frame_03.png',
+		],
+		shield_upgrade: [],
+		shotgun_upgrade: [],
+	},
 	meteor: {
 		default: 'src/meteor/METEOR.png',
 		white: 'src/meteor/METEOR_White_Frame.png',
@@ -255,8 +264,8 @@ function update() {
 	}
 
 	// [BUG] Possible bug: Should only substrack HALF of the player's total width
-	if (player1.x < 0 - player1.width) {
-		// stop(); disabled while in develpment
+	if (player1.y > canvas.height) {
+		// stop(); // disabled while in develpment
 
 		let gameOver = `
             <p>GAME OVER</p>

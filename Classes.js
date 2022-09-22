@@ -28,7 +28,7 @@ class Player {
 		this.y = y - this.height / 2;
 		this.frame = 0;
 		this.img = new Image();
-		this.img.src = imgs.player1[this.frame];
+		this.img.src = imgs.player1.idle[this.frame];
 		this.img.onload = this.draw;
 		this.gravity = 2;
 		this.moveSpeed = 3;
@@ -56,7 +56,7 @@ class Player {
 		if (this.frame === 3) this.frame = 0;
 		else this.frame++;
 
-		this.img.src = imgs.player1[this.frame];
+		this.img.src = imgs.player1.idle[this.frame];
 	};
 
 	moveUp = () => {
