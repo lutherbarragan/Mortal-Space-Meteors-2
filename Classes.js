@@ -22,14 +22,18 @@ class Board {
 
 class Player {
 	constructor(x, y) {
-		this.width = 64;
+		this.width = 54;
 		this.height = 64;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
-		this.frame = 0;
 		this.img = new Image();
 		this.img.src = imgs.player1.idle[this.frame];
 		this.img.onload = this.draw;
+		this.frame = 0;
+		this.frameLimit = 3;
+		this.currAnimation = 'idle';
+		this.prevAnimation = '';
+		// this.animationInterval = setInterval(this.frameAnimation(this.currAnimation), 100);
 		this.gravity = 2;
 		this.moveSpeed = 3;
 		this.moveDistance = 100;
@@ -44,19 +48,52 @@ class Player {
 		};
 		this.score = 0;
 		this.type = 'player';
+
+		console.log(this.img);
+
+		setInterval(this.frameAnimation(this.currAnimation), 100);
 	}
 
 	draw = () => {
-		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		// this.x -= this.gravity;
-		if (isRunning && frames % 10 === 0) this.frameAnimation();
+		// ctx.fillStyle = 'red';
+		// ctx.fillRect(this.x, this.y, this.width, this.height);
+
+		if (isRunning) {
+			//draw effect on top of Player sprite????
+			if (frames % 100 === 0) {
+				//FIX HERE!!
+				console.log(this.frame);
+				if (this.frame === imgs.player1[this.currAnimation].length - 1) {
+					// this.currAnimation = 'idle';
+					this.frame = 0;
+				} else {
+					this.img.src = imgs.player1[this.currAnimation][this.frame];
+					this.frame++;
+				}
+			}
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			// this.x -= this.gravity;
+			// if (frames % 100 === 0) this.frameAnimation(this.currAnimation);
+			// if (this.currAnimation !== this.prevAnimation) {
+			// clearInterval(this.animationInterval);
+			// this.animationInterval = setInterval(this.frameAnimation(this.currAnimation), 100);
+			// this.prevAnimation = this.currAnimation;
+			// }
+		}
 	};
 
-	frameAnimation = () => {
-		if (this.frame === 3) this.frame = 0;
-		else this.frame++;
+	frameAnimation = type => {
+		this.currAnimation = type;
 
-		this.img.src = imgs.player1.idle[this.frame];
+		console.log(this.frame);
+
+		if (this.frame === imgs.player1[type].length - 1) {
+			this.currAnimation = 'idle';
+			this.frame = 0;
+		} else {
+			this.img.src = imgs.player1[type][this.frame];
+			this.frame++;
+		}
 	};
 
 	moveUp = () => {
@@ -138,6 +175,12 @@ class Player {
 	};
 
 	getPushedBack = pushback => (this.y += pushback);
+
+	getUpgrade = instance => {
+		this.frameAnimation(instance.name);
+
+		//get attributes...
+	};
 }
 
 class Meteor {
@@ -224,7 +267,8 @@ class Bullet {
 //RENAME
 class Upgrade {
 	constructor(data) {
-		this.name = data.name;
+		// this.name = data.name;
+		this.name = 'shield';
 		this.id = Date.now();
 		this.width = 48;
 		this.height = 48;
@@ -233,7 +277,7 @@ class Upgrade {
 		this.img = new Image();
 		this.img.src = data.img;
 		this.img.onload = this.draw;
-		this.speed = 4;
+		this.speed = 2;
 		this.type = 'upgrade';
 	}
 

@@ -61,8 +61,19 @@ const imgs = {
 			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_03.png',
 		],
-		shield_upgrade: [],
-		shotgun_upgrade: [],
+		shield: [
+			'src/ship/shield_upgrade/frame_00.png',
+			'src/ship/shield_upgrade/frame_01.png',
+			'src/ship/shield_upgrade/frame_02.png',
+			'src/ship/shield_upgrade/frame_03.png',
+			'src/ship/shield_upgrade/frame_04.png',
+			'src/ship/shield_upgrade/frame_05.png',
+			'src/ship/shield_upgrade/frame_06.png',
+			'src/ship/shield_upgrade/frame_07.png',
+			'src/ship/shield_upgrade/frame_08.png',
+			'src/ship/shield_upgrade/frame_09.png',
+		],
+		shotgun: [],
 	},
 	meteor: {
 		default: 'src/meteor/METEOR.png',
@@ -145,6 +156,10 @@ function checkMeteorsCollitions(unit) {
 
 function checkUpgradeCollition(player) {
 	if (currentUpgrade.instance.checkCollition(player)) {
+		console.log(currentUpgrade.instance);
+
+		player.getUpgrade(currentUpgrade.instance);
+
 		currentUpgrade.allowToDraw = false;
 		currentUpgrade.instance = {};
 	}
@@ -171,7 +186,6 @@ function spawnUpgrade() {
 
 	currentUpgrade.allowToDraw = true;
 	currentUpgrade.instance = new Upgrade(data);
-	console.log(currentUpgrade);
 }
 
 // Main Functions
@@ -187,7 +201,7 @@ function start() {
 	timer.innerText = '0:00';
 	pauseScreen.style.display = 'none';
 
-	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 }
 
@@ -222,7 +236,7 @@ function update() {
 		if (spawnSpeed > 400) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 5;
-			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 		}
 	}
 
@@ -255,7 +269,7 @@ function update() {
 	bullets.forEach(bullet => bullet.draw());
 
 	//FIX**
-	if (frames % 1000 == 0) spawnUpgrade();
+	if (frames % 500 == 0) spawnUpgrade();
 	if (currentUpgrade.allowToDraw) currentUpgrade.instance.draw();
 	if (currentUpgrade.instance.y > canvas.height) {
 		currentUpgrade.allowToDraw = false;
