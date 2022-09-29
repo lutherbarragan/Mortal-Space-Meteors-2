@@ -56,10 +56,17 @@ const imgs = {
 	background: 'src/SPACE_HORIZON.png',
 	player1: {
 		idle: [
-			'src/ship/idle/frame_00.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_01.png',
 			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_03.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
+			'src/ship/idle/frame_03.png',
+			'src/ship/idle/frame_00.png',
 		],
 		shield: [
 			'src/ship/shield_upgrade/frame_00.png',
@@ -203,6 +210,7 @@ function start() {
 
 	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
+	playerAnimationInterval = setInterval(player1.animationInterval, 100);
 }
 
 function update() {
@@ -297,4 +305,5 @@ function stop() {
 	pauseScreen.style.display = 'block';
 	clearInterval(mainInterval);
 	clearInterval(meteorSpawner);
+	clearInterval(playerAnimationInterval);
 }

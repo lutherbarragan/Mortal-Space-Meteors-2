@@ -27,13 +27,11 @@ class Player {
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
 		this.img = new Image();
+		this.frame = 0;
 		this.img.src = imgs.player1.idle[this.frame];
 		this.img.onload = this.draw;
-		this.frame = 0;
-		this.frameLimit = 3;
-		this.currAnimation = 'idle';
-		this.prevAnimation = '';
-		// this.animationInterval = setInterval(this.frameAnimation(this.currAnimation), 100);
+		this.currentAnimation = 'idle';
+		this.previousAnimation = 'idle';
 		this.gravity = 2;
 		this.moveSpeed = 3;
 		this.moveDistance = 100;
@@ -48,52 +46,28 @@ class Player {
 		};
 		this.score = 0;
 		this.type = 'player';
-
-		console.log(this.img);
-
-		setInterval(this.frameAnimation(this.currAnimation), 100);
 	}
 
 	draw = () => {
-		// ctx.fillStyle = 'red';
-		// ctx.fillRect(this.x, this.y, this.width, this.height);
-
 		if (isRunning) {
-			//draw effect on top of Player sprite????
-			if (frames % 100 === 0) {
-				//FIX HERE!!
-				console.log(this.frame);
-				if (this.frame === imgs.player1[this.currAnimation].length - 1) {
-					// this.currAnimation = 'idle';
-					this.frame = 0;
-				} else {
-					this.img.src = imgs.player1[this.currAnimation][this.frame];
-					this.frame++;
-				}
-			}
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			// this.x -= this.gravity;
-			// if (frames % 100 === 0) this.frameAnimation(this.currAnimation);
-			// if (this.currAnimation !== this.prevAnimation) {
-			// clearInterval(this.animationInterval);
-			// this.animationInterval = setInterval(this.frameAnimation(this.currAnimation), 100);
-			// this.prevAnimation = this.currAnimation;
-			// }
 		}
 	};
 
-	frameAnimation = type => {
-		this.currAnimation = type;
-
-		console.log(this.frame);
-
-		if (this.frame === imgs.player1[type].length - 1) {
-			this.currAnimation = 'idle';
+	animationInterval = () => {
+		if (this.frame === imgs.player1[this.currentAnimation].length - 1) {
+			this.currentAnimation = 'idle';
 			this.frame = 0;
 		} else {
-			this.img.src = imgs.player1[type][this.frame];
 			this.frame++;
 		}
+
+		this.img.src = imgs.player1[this.currentAnimation][this.frame];
+	};
+
+	updateAnimation = type => {
+		this.currentAnimation = type;
+		this.frame = 0;
 	};
 
 	moveUp = () => {
