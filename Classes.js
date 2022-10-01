@@ -22,14 +22,14 @@ class Board {
 
 class Player {
 	constructor(x, y) {
-		this.width = 128;
-		this.height = 172;
+		this.width = 183;
+		this.height = 241;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
 		///
 		this.hitbox = {
-			width: 54,
-			height: 64,
+			width: 105,
+			height: 111,
 			x: this.x,
 			y: this.y,
 		};
@@ -59,16 +59,17 @@ class Player {
 	draw = () => {
 		if (isRunning) {
 			//PLAYER
-			// ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 			ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
 			ctx.fillRect(this.x, this.y, this.width, this.height);
 
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
-			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2 - 8;
 
 			ctx.fillStyle = 'red';
 			ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
+
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
 	};
 
