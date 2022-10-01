@@ -22,16 +22,24 @@ class Board {
 
 class Player {
 	constructor(x, y) {
-		this.width = 54;
-		this.height = 64;
+		this.width = 128;
+		this.height = 172;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
+		///
+		this.hitbox = {
+			width: 54,
+			height: 64,
+			x: this.x,
+			y: this.y,
+		};
+		///
 		this.img = new Image();
 		this.frame = 0;
 		this.img.src = imgs.player1.idle[this.frame];
 		this.img.onload = this.draw;
-		this.currentAnimation = 'idle';
-		this.previousAnimation = 'idle';
+		this.animation = 'idle';
+		this.animationInterval;
 		this.gravity = 2;
 		this.moveSpeed = 3;
 		this.moveDistance = 100;
@@ -50,24 +58,34 @@ class Player {
 
 	draw = () => {
 		if (isRunning) {
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			//PLAYER
+			// ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
+			ctx.fillRect(this.x, this.y, this.width, this.height);
+
+			//HITBOX
+			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+
+			ctx.fillStyle = 'red';
+			ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
 		}
 	};
 
-	animationInterval = () => {
-		if (this.frame === imgs.player1[this.currentAnimation].length - 1) {
-			this.currentAnimation = 'idle';
+	framesInterval = () => {
+		if (this.frame === imgs.player1[this.animation].length - 1) {
+			this.animation = 'idle';
 			this.frame = 0;
-		} else {
-			this.frame++;
 		}
-
-		this.img.src = imgs.player1[this.currentAnimation][this.frame];
+		this.img.src = imgs.player1[this.animation][this.frame];
+		this.frame++;
 	};
 
 	updateAnimation = type => {
-		this.currentAnimation = type;
+		this.animation = 'shield';
 		this.frame = 0;
+		console.log('[Player.updateAnimation]', this.animation, this.frame);
+		// this.framesInterval();
 	};
 
 	moveUp = () => {
@@ -80,8 +98,9 @@ class Player {
 			distanceTravelled += this.moveSpeed;
 
 			if (distanceTravelled >= this.height) {
-				if (this.y - this.height <= 0) this.y = 0;
-
+				if (this.y - this.height <= 0) {
+					this.y = 0;
+				}
 				clearInterval(moveUpIntr);
 			}
 		}, 6);
@@ -140,7 +159,7 @@ class Player {
 
 	shoot = () => {
 		const x = this.x + this.width / 2;
-		const y = this.y + this.height * 0;
+		const y = this.y + this.height / 3;
 
 		bullets.push(new Bullet(x, y));
 
@@ -242,7 +261,7 @@ class Bullet {
 class Upgrade {
 	constructor(data) {
 		// this.name = data.name;
-		this.name = 'shield';
+		this.name = data.name;
 		this.id = Date.now();
 		this.width = 48;
 		this.height = 48;

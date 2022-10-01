@@ -32,28 +32,12 @@ let global_data = {
 		sm: 0,
 	},
 };
-const UPGRADES_DATA = [
-	{
-		name: 'shotgun',
-		type: 'weapon',
-		img: 'src/upgrades/shotgun_icon.png',
-		attackSpeed: 50,
-		width: 24,
-		height: 24,
-	},
-	{
-		name: 'shield',
-		type: 'defense',
-		img: 'src/upgrades/shield_icon.png',
-	},
-];
 
 canvas.width = BODY.offsetWidth;
 canvas.height = BODY.offsetHeight;
 
-// let extraSpeed = 0;
 const imgs = {
-	background: 'src/SPACE_HORIZON.png',
+	background: 'src/background/space_horizon.png',
 	player1: {
 		idle: [
 			'src/ship/idle/frame_01.png',
@@ -69,32 +53,48 @@ const imgs = {
 			'src/ship/idle/frame_00.png',
 		],
 		shield: [
-			'src/ship/shield_upgrade/frame_00.png',
-			'src/ship/shield_upgrade/frame_01.png',
-			'src/ship/shield_upgrade/frame_02.png',
-			'src/ship/shield_upgrade/frame_03.png',
-			'src/ship/shield_upgrade/frame_04.png',
-			'src/ship/shield_upgrade/frame_05.png',
-			'src/ship/shield_upgrade/frame_06.png',
-			'src/ship/shield_upgrade/frame_07.png',
-			'src/ship/shield_upgrade/frame_08.png',
-			'src/ship/shield_upgrade/frame_09.png',
+			'src/ship/upgrades/shield/frame_00.png',
+			'src/ship/upgrades/shield/frame_01.png',
+			'src/ship/upgrades/shield/frame_02.png',
+			'src/ship/upgrades/shield/frame_03.png',
+			'src/ship/upgrades/shield/frame_04.png',
+			'src/ship/upgrades/shield/frame_05.png',
+			'src/ship/upgrades/shield/frame_06.png',
+			'src/ship/upgrades/shield/frame_07.png',
+			'src/ship/upgrades/shield/frame_08.png',
 		],
 		shotgun: [],
 	},
 	meteor: {
-		default: 'src/meteor/METEOR.png',
-		white: 'src/meteor/METEOR_White_Frame.png',
-		red: 'src/meteor/METEOR_Red_Frame.png',
-		redTransparent: 'src/meteor/METEOR_Red_Transparent_Frame.png',
+		default: 'src/spawns/meteor/METEOR.png',
+		white: 'src/spawns/meteor/METEOR_White_Frame.png',
+		red: 'src/spawns/meteor/METEOR_Red_Frame.png',
+		redTransparent: 'src/spawns/meteor/METEOR_Red_Transparent_Frame.png',
 	},
 	bullets: {
-		default: 'src/bullet.png',
+		default: 'src/ship/bullet.png',
 	},
-	enhancers: {
-		shotgun: 'src/shotgunIcon.png',
+	grabbables: {
+		shield: 'src/grabbables/shield_icon.png',
+		shotgun: 'src/grabbables/shotgun_icon.png',
 	},
 };
+
+const UPGRADES_DATA = [
+	{
+		name: 'shotgun',
+		type: 'weapon',
+		img: imgs.grabbables.shotgun,
+		attackSpeed: 50,
+		width: 24,
+		height: 24,
+	},
+	{
+		name: 'shield',
+		type: 'defense',
+		img: imgs.grabbables.shield,
+	},
+];
 
 // instances
 let board = new Board();
@@ -163,9 +163,10 @@ function checkMeteorsCollitions(unit) {
 
 function checkUpgradeCollition(player) {
 	if (currentUpgrade.instance.checkCollition(player)) {
-		console.log(currentUpgrade.instance);
+		// console.log(currentUpgrade.instance);
 
-		player.getUpgrade(currentUpgrade.instance);
+		// player.getUpgrade(currentUpgrade.instance);
+		player.updateAnimation(currentUpgrade.instance.name);
 
 		currentUpgrade.allowToDraw = false;
 		currentUpgrade.instance = {};
@@ -210,7 +211,7 @@ function start() {
 
 	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
-	playerAnimationInterval = setInterval(player1.animationInterval, 100);
+	playerAnimationInterval = setInterval(player1.framesInterval, 500);
 }
 
 function update() {
