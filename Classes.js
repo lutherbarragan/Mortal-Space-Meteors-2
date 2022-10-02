@@ -80,15 +80,15 @@ class Player {
 		this.frame++;
 	};
 
-	updateAnimation = type => {
-		this.animation = 'shield';
+	updateAnimation = name => {
+		this.animation = 'shield'; // name here
 		this.frame = 0;
 		console.log('[Player.updateAnimation]', this.animation, this.frame);
 		// this.framesInterval();
 	};
 
 	getUpgrade = instance => {
-		this.frameAnimation(instance.name);
+		this.updateAnimation(instance.name);
 
 		//get attributes...
 	};
@@ -176,13 +176,13 @@ class Player {
 		this.y += pushback;
 	};
 
-	hasCollided = unit => {
-		return (
-			this.hitbox.x < unit.hitbox.x + unit.hitbox.width &&
-			this.hitbox.x + this.hitbox.width > unit.hitbox.x &&
-			this.hitbox.y < unit.hitbox.y + unit.hitbox.height &&
-			this.hitbox.y + this.hitbox.height > unit.hitbox.y
-		);
+	hasCollidedWith = target => {
+		if (target.type === 'upgrade') {
+			this.updateAnimation(currentUpgrade.instance.name);
+
+			currentUpgrade.allowToDraw = false;
+			currentUpgrade.instance = {};
+		}
 	};
 }
 
@@ -281,8 +281,8 @@ class Bullet {
 //RENAME
 class Upgrade {
 	constructor(data) {
-		// this.name = data.name;
 		this.name = data.name;
+		this.type = 'upgrade';
 		this.id = Date.now();
 		this.width = 48;
 		this.height = 48;
@@ -298,7 +298,6 @@ class Upgrade {
 		this.img.src = data.img;
 		this.img.onload = this.draw;
 		this.speed = 2;
-		this.type = 'upgrade';
 	}
 
 	draw = () => {

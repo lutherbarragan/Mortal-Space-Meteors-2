@@ -161,20 +161,14 @@ function checkMeteorsCollitions(unit) {
 	});
 }
 
-function checkUpgradeCollition(player) {
-	if (currentUpgrade.instance.checkCollition(player)) {
-		// console.log(currentUpgrade.instance);
-
-		// player.getUpgrade(currentUpgrade.instance);
-		player.updateAnimation(currentUpgrade.instance.name);
-
-		currentUpgrade.allowToDraw = false;
-		currentUpgrade.instance = {};
-	}
-}
-
-function checkCollition(unit, target) {
-	//...do Someting
+function checkCollitionBetween(unit, target) {
+	if (
+		unit.hitbox.x < target.hitbox.x + target.hitbox.width &&
+		unit.hitbox.x + unit.hitbox.width > target.hitbox.x &&
+		unit.hitbox.y < target.hitbox.y + target.hitbox.height &&
+		unit.hitbox.y + unit.hitbox.height > target.hitbox.y
+	)
+		unit.hasCollidedWith(target);
 }
 
 function checkCooldowns() {
@@ -267,7 +261,7 @@ function update() {
 
 	// [FEATURE] Add life score
 	checkMeteorsCollitions(player1);
-	if (currentUpgrade.allowToDraw) checkUpgradeCollition(player1);
+	if (currentUpgrade.allowToDraw) checkCollitionBetween(player1, currentUpgrade.instance);
 
 	player1.draw();
 
