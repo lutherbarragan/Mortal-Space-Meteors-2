@@ -26,14 +26,12 @@ class Player {
 		this.height = 241;
 		this.x = x - this.width / 2;
 		this.y = y - this.height / 2;
-		///
 		this.hitbox = {
 			width: 105,
 			height: 111,
-			x: this.x,
-			y: this.y,
+			x: this.x + this.width / 2 - 105 / 2,
+			y: this.y + this.height / 2 - 111 / 2 - 8,
 		};
-		///
 		this.img = new Image();
 		this.frame = 0;
 		this.img.src = imgs.player1.idle[this.frame];
@@ -58,7 +56,7 @@ class Player {
 
 	draw = () => {
 		if (isRunning) {
-			//PLAYER
+			//UNIT VISUAL
 			ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
 			ctx.fillRect(this.x, this.y, this.width, this.height);
 
@@ -87,6 +85,12 @@ class Player {
 		this.frame = 0;
 		console.log('[Player.updateAnimation]', this.animation, this.frame);
 		// this.framesInterval();
+	};
+
+	getUpgrade = instance => {
+		this.frameAnimation(instance.name);
+
+		//get attributes...
 	};
 
 	moveUp = () => {
@@ -168,12 +172,17 @@ class Player {
 		this.weapon.cooldownCount = this.weapon.attackSpeed;
 	};
 
-	getPushedBack = pushback => (this.y += pushback);
+	getPushedBack = pushback => {
+		this.y += pushback;
+	};
 
-	getUpgrade = instance => {
-		this.frameAnimation(instance.name);
-
-		//get attributes...
+	hasCollided = unit => {
+		return (
+			this.hitbox.x < unit.hitbox.x + unit.hitbox.width &&
+			this.hitbox.x + this.hitbox.width > unit.hitbox.x &&
+			this.hitbox.y < unit.hitbox.y + unit.hitbox.height &&
+			this.hitbox.y + this.hitbox.height > unit.hitbox.y
+		);
 	};
 }
 
@@ -184,6 +193,12 @@ class Meteor {
 		this.height = props.width;
 		this.x = Math.floor(Math.random() * canvas.width);
 		this.y = 0 - this.height;
+		this.hitbox = {
+			width: this.width,
+			height: this.height,
+			x: this.x,
+			y: this.y,
+		};
 		this.img = new Image();
 		this.img.src = imgs.meteor.default;
 		this.img.onload = this.draw;
@@ -197,18 +212,13 @@ class Meteor {
 
 	draw = () => {
 		if (this.hp > 0) {
+			//HITBOX
+			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 			this.y += this.speed;
 		}
-	};
-
-	checkCollition = unit => {
-		return (
-			this.x < unit.x + unit.width &&
-			this.x + this.width > unit.x &&
-			this.y < unit.y + unit.height &&
-			this.y + this.height > unit.y
-		);
 	};
 
 	takeDamage = damage => {
@@ -242,6 +252,12 @@ class Bullet {
 		this.height = 12;
 		this.x = x - this.width / 2;
 		this.y = y;
+		this.hitbox = {
+			width: this.width,
+			height: this.height,
+			x: this.x,
+			y: this.y,
+		};
 		this.img = new Image();
 		this.img.src = imgs.bullets.default;
 		this.img.onload = this.draw;
@@ -252,6 +268,10 @@ class Bullet {
 
 	draw = () => {
 		if (this.allowToDraw) {
+			//HITBOX
+			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 			this.y -= 10;
 		}
@@ -268,6 +288,12 @@ class Upgrade {
 		this.height = 48;
 		this.x = Math.floor(Math.random() * canvas.width);
 		this.y = 0 - this.height;
+		this.hitbox = {
+			width: this.width,
+			height: this.height,
+			x: this.x,
+			y: this.y,
+		};
 		this.img = new Image();
 		this.img.src = data.img;
 		this.img.onload = this.draw;
@@ -276,16 +302,11 @@ class Upgrade {
 	}
 
 	draw = () => {
+		//HITBOX
+		this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+		this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+
 		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		this.y += this.speed;
-	};
-
-	checkCollition = unit => {
-		return (
-			this.x < unit.x + unit.width &&
-			this.x + this.width > unit.x &&
-			this.y < unit.y + unit.height &&
-			this.y + this.height > unit.y
-		);
 	};
 }

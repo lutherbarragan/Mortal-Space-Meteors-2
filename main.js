@@ -173,6 +173,10 @@ function checkUpgradeCollition(player) {
 	}
 }
 
+function checkCollition(unit, target) {
+	//...do Someting
+}
+
 function checkCooldowns() {
 	// All cooldowns
 	if (!player1.weapon.isReady) reduceCooldownCount(player1, 'weapon');
