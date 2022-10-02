@@ -166,7 +166,7 @@ class Player {
 		const x = this.x + this.width / 2;
 		const y = this.y + this.height / 3;
 
-		bullets.push(new Bullet(x, y));
+		UNITS.bullets.push(new Bullet(x, y));
 
 		this.weapon.isReady = false;
 		this.weapon.cooldownCount = this.weapon.attackSpeed;
@@ -179,9 +179,10 @@ class Player {
 	hasCollidedWith = target => {
 		if (target.type === 'upgrade') {
 			this.updateAnimation(currentUpgrade.instance.name);
-
 			currentUpgrade.allowToDraw = false;
 			currentUpgrade.instance = {};
+		} else if (target.type === 'meteor') {
+			this.getPushedBack(target.pushback);
 		}
 	};
 }
@@ -211,7 +212,7 @@ class Meteor {
 	}
 
 	draw = () => {
-		if (this.hp > 0) {
+		if (isRunning) {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
@@ -221,11 +222,21 @@ class Meteor {
 		}
 	};
 
-	takeDamage = damage => {
-		this.hp -= damage;
+	hasCollidedWith = target => {
+		if (target.type === 'bullet') this.takeDamage(target);
+	};
+
+	takeDamage = bullet => {
+		bullet.allowToDraw = false;
+		this.hp -= bullet.damage;
 		this.y -= 15;
 
 		this.damageEffect();
+
+		if (this.hp <= 0) {
+			meteorScore[this.size]++;
+			player1.score += this.value;
+		}
 	};
 
 	damageEffect = () => {
@@ -267,7 +278,7 @@ class Bullet {
 	}
 
 	draw = () => {
-		if (this.allowToDraw) {
+		if (isRunning) {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;

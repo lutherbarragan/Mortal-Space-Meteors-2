@@ -99,8 +99,11 @@ const UPGRADES_DATA = [
 // instances
 let board = new Board();
 let player1 = new Player(canvas.width / 2, canvas.height / 2);
-const meteors = [];
-const bullets = [];
+const UNITS = {
+	meteors: [],
+	bullets: [],
+};
+
 const meteorScore = {
 	sm: 0,
 	md: 0,
@@ -136,39 +139,20 @@ const meteorTypes = [
 // Aux Functions
 function spawnMeteor() {
 	const newMeteor = meteorTypes[Math.floor(Math.random() * 3)];
-	meteors.push(new Meteor(newMeteor));
+	UNITS.meteors.push(new Meteor(newMeteor));
 }
 
-function checkMeteorsCollitions(unit) {
-	meteors.forEach(meteor => {
-		if (meteor.hp > 0) {
-			if (meteor.checkCollition(unit)) {
-				if (unit.type == 'player') {
-					unit.getPushedBack(meteor.pushback);
-				}
-
-				if (unit.type == 'bullet') {
-					unit.allowToDraw = false;
-					meteor.takeDamage(unit.damage);
-
-					if (meteor.hp <= 0) {
-						meteorScore[meteor.size]++;
-						player1.score += meteor.value;
-					}
-				}
-			}
-		}
-	});
-}
-
+//COLLITION BETWEEN PLAYR AND METEOR IS NOT BEING TRIGGERED, FIX!!!!
 function checkCollitionBetween(unit, target) {
 	if (
 		unit.hitbox.x < target.hitbox.x + target.hitbox.width &&
 		unit.hitbox.x + unit.hitbox.width > target.hitbox.x &&
 		unit.hitbox.y < target.hitbox.y + target.hitbox.height &&
 		unit.hitbox.y + unit.hitbox.height > target.hitbox.y
-	)
+	) {
+		console.log(unit, target);
 		unit.hasCollidedWith(target);
+	}
 }
 
 function checkCooldowns() {
@@ -207,7 +191,7 @@ function start() {
 	timer.innerText = '0:00';
 	pauseScreen.style.display = 'none';
 
-	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 	playerAnimationInterval = setInterval(player1.framesInterval, 60);
 }
@@ -243,7 +227,7 @@ function update() {
 		if (spawnSpeed > 400) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 5;
-			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 		}
 	}
 
@@ -259,21 +243,29 @@ function update() {
 	//  (Re) Draw new content
 	board.draw();
 
-	// [FEATURE] Add life score
-	checkMeteorsCollitions(player1);
+	UNITS.meteors.forEach(meteor => {
+		UNITS.bullets.forEach(bullet => {
+			if (bullet.allowToDraw) checkCollitionBetween(meteor, bullet);
+		});
+	});
+	UNITS.meteors.forEach(meteor => checkCollitionBetween(player1, meteor));
 	if (currentUpgrade.allowToDraw) checkCollitionBetween(player1, currentUpgrade.instance);
 
 	player1.draw();
 
-	bullets.forEach(bullet => {
-		if (bullet.allowToDraw) checkMeteorsCollitions(bullet);
+	// CHECK AND REMOVE METEORS
+	UNITS.meteors.forEach(meteor => {
+		if (meteor.y > canvas.height) meteor.hp = 0;
+		else meteor.draw();
 	});
+	UNITS.meteors = UNITS.meteors.filter(meteor => meteor.hp > 0);
 
-	meteors.forEach(meteor => {
-		if (meteor.y < canvas.height) meteor.draw();
+	// CHECK AND REMOVE BULLETS
+	UNITS.bullets.forEach(bullet => {
+		if (bullet.y < 0) bullet.allowToDraw = false;
+		else bullet.draw();
 	});
-
-	bullets.forEach(bullet => bullet.draw());
+	UNITS.bullets = UNITS.bullets.filter(bullet => bullet.allowToDraw);
 
 	//FIX**
 	if (frames % 500 == 0) spawnUpgrade();
