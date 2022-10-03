@@ -112,15 +112,16 @@ class Player {
 	};
 
 	moveDown = () => {
-		if (this.y + this.height >= canvas.height) return;
+		if (this.hitbox.y + this.hitbox.height >= canvas.height) return;
 
 		let distanceTravelled = 0;
 		let moveDownIntr = setInterval(() => {
 			this.y += this.moveSpeed;
 			distanceTravelled += this.moveSpeed;
 
-			if (distanceTravelled >= this.height) {
-				if (this.y + this.height >= canvas.height) this.y = canvas.height - this.height;
+			if (distanceTravelled >= this.hitbox.height) {
+				if (this.hitbox.y + this.hitbox.height >= canvas.height)
+					this.y = canvas.height - this.height + this.hitbox.height;
 
 				clearInterval(moveDownIntr);
 			}
@@ -190,6 +191,7 @@ class Player {
 class Meteor {
 	constructor(props) {
 		this.id = Date.now();
+		this.type = 'meteor';
 		this.width = props.width;
 		this.height = props.width;
 		this.x = Math.floor(Math.random() * canvas.width);
@@ -208,7 +210,6 @@ class Meteor {
 		this.value = props.value;
 		this.pushback = props.pushback;
 		this.size = props.size;
-		this.type = 'obstacle';
 	}
 
 	draw = () => {
