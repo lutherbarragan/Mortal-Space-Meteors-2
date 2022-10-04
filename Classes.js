@@ -39,7 +39,7 @@ class Player {
 		this.animation = 'idle';
 		this.animationInterval;
 		this.gravity = 2;
-		this.moveSpeed = 3;
+		this.moveSpeed = 2;
 		this.moveDistance = 100;
 		this.weapon = {
 			type: 'default',
@@ -63,12 +63,85 @@ class Player {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2 - 8;
-
 			ctx.fillStyle = 'red';
 			ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
 
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
+	};
+
+	moveUp = () => {
+		let distanceTravelled = 0;
+
+		let moveUpIntr = setInterval(() => {
+			this.y -= this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.hitbox.height) {
+				clearInterval(moveUpIntr);
+			}
+			if (this.hitbox.y - this.moveSpeed <= 0) {
+				this.y = 0 - this.hitbox.height / 2;
+				clearInterval(moveUpIntr);
+			}
+		}, 1);
+	};
+
+	moveDown = () => {
+		let distanceTravelled = 0;
+
+		let moveDownIntr = setInterval(() => {
+			this.y += this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.hitbox.height) {
+				clearInterval(moveDownIntr);
+			}
+			if (this.hitbox.y + this.moveSpeed >= canvas.height - this.hitbox.height) {
+				this.y = canvas.height - this.hitbox.height * 1.5;
+				clearInterval(moveDownIntr);
+			}
+		}, 1);
+	};
+
+	moveLeft = () => {
+		let distanceTravelled = 0;
+
+		let moveLeftIntr = setInterval(() => {
+			this.x -= this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.hitbox.width) {
+				clearInterval(moveLeftIntr);
+			}
+
+			if (this.hitbox.x - this.hitbox.width - this.moveSpeed < 0) {
+				if (this.hitbox.x <= 0 - this.hitbox.width) {
+					this.x = canvas.width;
+				}
+				distanceTravelled = 0;
+			}
+		}, 1);
+	};
+
+	moveRight = () => {
+		let distanceTravelled = 0;
+
+		let moveRightIntr = setInterval(() => {
+			this.x += this.moveSpeed;
+			distanceTravelled += this.moveSpeed;
+
+			if (distanceTravelled >= this.hitbox.width) {
+				clearInterval(moveRightIntr);
+			}
+
+			if (this.hitbox.x + this.hitbox.width + this.moveSpeed > canvas.width) {
+				if (this.hitbox.x >= canvas.width) {
+					this.x = 0 - this.width;
+				}
+				distanceTravelled = 0;
+			}
+		}, 1);
 	};
 
 	framesInterval = () => {
@@ -91,76 +164,6 @@ class Player {
 		this.updateAnimation(instance.name);
 
 		//get attributes...
-	};
-
-	moveUp = () => {
-		if (this.y - this.height <= 0) return;
-
-		let distanceTravelled = 0;
-
-		let moveUpIntr = setInterval(() => {
-			this.y -= this.moveSpeed;
-			distanceTravelled += this.moveSpeed;
-
-			if (distanceTravelled >= this.height) {
-				if (this.y - this.height <= 0) {
-					this.y = 0;
-				}
-				clearInterval(moveUpIntr);
-			}
-		}, 6);
-	};
-
-	moveDown = () => {
-		if (this.hitbox.y + this.hitbox.height >= canvas.height) return;
-
-		let distanceTravelled = 0;
-		let moveDownIntr = setInterval(() => {
-			this.y += this.moveSpeed;
-			distanceTravelled += this.moveSpeed;
-
-			if (distanceTravelled >= this.hitbox.height) {
-				if (this.hitbox.y + this.hitbox.height >= canvas.height)
-					this.y = canvas.height - this.height + this.hitbox.height;
-
-				clearInterval(moveDownIntr);
-			}
-		}, 6);
-	};
-
-	moveLeft = () => {
-		this.gravity = 0;
-		let distanceTravelled = 0;
-		let moveLeftIntr = setInterval(() => {
-			this.x -= this.moveSpeed;
-			distanceTravelled += this.moveSpeed;
-
-			if (distanceTravelled >= this.moveDistance) {
-				clearInterval(moveLeftIntr);
-				if (this.x <= this.width / 2) this.x = canvas.width - this.width / 2;
-
-				setTimeout(() => {
-					this.gravity = 2;
-				}, 25);
-			}
-		}, 6);
-	};
-
-	moveRight = () => {
-		this.gravity = 0;
-		let distanceTravelled = 0;
-		let moveRightIntr = setInterval(() => {
-			this.x += this.moveSpeed;
-			distanceTravelled += this.moveSpeed;
-
-			if (distanceTravelled >= this.moveDistance) {
-				if (this.x + this.width / 2 >= canvas.width) this.x = 0 - this.width / 2;
-				clearInterval(moveRightIntr);
-				setTimeout(() => {
-					this.gravity = 2;
-				}, 25);
-			}
-		}, 6);
 	};
 
 	shoot = () => {

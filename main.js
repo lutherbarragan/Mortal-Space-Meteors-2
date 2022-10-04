@@ -191,7 +191,7 @@ function start() {
 	timer.innerText = '0:00';
 	pauseScreen.style.display = 'none';
 
-	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 	playerAnimationInterval = setInterval(player1.framesInterval, 60);
 }
@@ -227,7 +227,7 @@ function update() {
 		if (spawnSpeed > 400) {
 			clearInterval(meteorSpawner);
 			spawnSpeed -= 5;
-			meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 		}
 	}
 
