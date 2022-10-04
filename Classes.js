@@ -39,7 +39,7 @@ class Player {
 		this.animation = 'idle';
 		this.animationInterval;
 		this.gravity = 2;
-		this.moveSpeed = 2;
+		this.moveSpeed = 3;
 		this.moveDistance = 100;
 		this.weapon = {
 			type: 'default',
@@ -57,14 +57,14 @@ class Player {
 	draw = () => {
 		if (isRunning) {
 			//UNIT VISUAL
-			ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
-			ctx.fillRect(this.x, this.y, this.width, this.height);
+			// ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
+			// ctx.fillRect(this.x, this.y, this.width, this.height);
 
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2 - 8;
-			ctx.fillStyle = 'red';
-			ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
+			// ctx.fillStyle = 'red';
+			// ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
 
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
@@ -154,10 +154,8 @@ class Player {
 	};
 
 	updateAnimation = name => {
-		this.animation = 'shield'; // name here
+		this.animation = name;
 		this.frame = 0;
-		console.log('[Player.updateAnimation]', this.animation, this.frame);
-		// this.framesInterval();
 	};
 
 	getUpgrade = instance => {

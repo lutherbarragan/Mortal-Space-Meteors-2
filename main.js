@@ -62,8 +62,24 @@ const imgs = {
 			'src/ship/upgrades/shield/frame_06.png',
 			'src/ship/upgrades/shield/frame_07.png',
 			'src/ship/upgrades/shield/frame_08.png',
+			'src/ship/upgrades/shield/frame_08.png',
+			'src/ship/upgrades/shield/frame_08.png',
+			'src/ship/upgrades/shield/frame_08.png',
 		],
-		shotgun: [],
+		shotgun: [
+			'src/ship/upgrades/shotgun/frame_00.png',
+			'src/ship/upgrades/shotgun/frame_01.png',
+			'src/ship/upgrades/shotgun/frame_02.png',
+			'src/ship/upgrades/shotgun/frame_03.png',
+			'src/ship/upgrades/shotgun/frame_04.png',
+			'src/ship/upgrades/shotgun/frame_05.png',
+			'src/ship/upgrades/shotgun/frame_06.png',
+			'src/ship/upgrades/shotgun/frame_07.png',
+			'src/ship/upgrades/shotgun/frame_08.png',
+			'src/ship/upgrades/shotgun/frame_08.png',
+			'src/ship/upgrades/shotgun/frame_08.png',
+			'src/ship/upgrades/shotgun/frame_08.png',
+		],
 	},
 	meteor: {
 		default: 'src/spawns/meteor/METEOR.png',
@@ -251,8 +267,6 @@ function update() {
 	UNITS.meteors.forEach(meteor => checkCollitionBetween(player1, meteor));
 	if (currentUpgrade.allowToDraw) checkCollitionBetween(player1, currentUpgrade.instance);
 
-	player1.draw();
-
 	// CHECK AND REMOVE METEORS
 	UNITS.meteors.forEach(meteor => {
 		if (meteor.y > canvas.height) meteor.hp = 0;
@@ -266,6 +280,8 @@ function update() {
 		else bullet.draw();
 	});
 	UNITS.bullets = UNITS.bullets.filter(bullet => bullet.allowToDraw);
+
+	player1.draw();
 
 	//FIX**
 	if (frames % 500 == 0) spawnUpgrade();
