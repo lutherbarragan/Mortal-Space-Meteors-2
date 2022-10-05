@@ -82,13 +82,27 @@ const imgs = {
 		],
 	},
 	meteor: {
-		default: 'src/spawns/meteor/METEOR.png',
-		white: 'src/spawns/meteor/METEOR_White_Frame.png',
-		red: 'src/spawns/meteor/METEOR_Red_Frame.png',
-		redTransparent: 'src/spawns/meteor/METEOR_Red_Transparent_Frame.png',
+		default: 'src/spawns/meteor/meteor_default.png',
+		damage: 'src/spawns/meteor/meteor_white.png',
 	},
 	bullets: {
-		default: 'src/ship/bullet.png',
+		default: {
+			img: 'src/projectiles/default/bullet.png',
+			hit: [
+				'src/projectiles/default/hit/frame_00.png',
+				'src/projectiles/default/hit/frame_00.png',
+				'src/projectiles/default/hit/frame_00.png',
+				'src/projectiles/default/hit/frame_00.png',
+				'src/projectiles/default/hit/frame_01.png',
+				'src/projectiles/default/hit/frame_01.png',
+				'src/projectiles/default/hit/frame_01.png',
+				'src/projectiles/default/hit/frame_01.png',
+				'src/projectiles/default/hit/frame_02.png',
+				'src/projectiles/default/hit/frame_02.png',
+				'src/projectiles/default/hit/frame_02.png',
+				'src/projectiles/default/hit/frame_02.png',
+			],
+		},
 	},
 	grabbables: {
 		shield: 'src/grabbables/shield_icon.png',
@@ -166,7 +180,6 @@ function checkCollitionBetween(unit, target) {
 		unit.hitbox.y < target.hitbox.y + target.hitbox.height &&
 		unit.hitbox.y + unit.hitbox.height > target.hitbox.y
 	) {
-		console.log(unit, target);
 		unit.hasCollidedWith(target);
 	}
 }
@@ -207,7 +220,7 @@ function start() {
 	timer.innerText = '0:00';
 	pauseScreen.style.display = 'none';
 
-	// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
+	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 	mainInterval = setInterval(update, 10); // 100FPS
 	playerAnimationInterval = setInterval(player1.framesInterval, 60);
 }
@@ -241,8 +254,8 @@ function update() {
 
 		timer.innerText = `${mins}:${secs}`;
 		if (spawnSpeed > 400) {
-			clearInterval(meteorSpawner);
-			spawnSpeed -= 5;
+			// clearInterval(meteorSpawner);
+			// spawnSpeed -= 5;
 			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
 		}
 	}

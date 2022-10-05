@@ -211,6 +211,8 @@ class Meteor {
 		this.value = props.value;
 		this.pushback = props.pushback;
 		this.size = props.size;
+
+		this.hitAnimationInstance = { allowToDraw: false };
 	}
 
 	draw = () => {
@@ -220,8 +222,13 @@ class Meteor {
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
 
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			this.y += this.speed;
+
+			if (this.hitAnimationInstance.allowToDraw) {
+				this.hitAnimationInstance.draw(this.y + this.height);
+			} else this.hitAnimationInstance.allowToDraw = false;
 		}
+
+		this.y += this.speed;
 	};
 
 	hasCollidedWith = target => {
@@ -229,32 +236,49 @@ class Meteor {
 	};
 
 	takeDamage = bullet => {
-		bullet.allowToDraw = false;
 		this.hp -= bullet.damage;
 		this.y -= 15;
-
-		this.damageEffect();
+		this.damageEffect(bullet);
 
 		if (this.hp <= 0) {
 			meteorScore[this.size]++;
 			player1.score += this.value;
 		}
+
+		bullet.allowToDraw = false;
 	};
 
-	damageEffect = () => {
-		this.img.src = imgs.meteor.white;
-
-		setTimeout(() => {
-			this.img.src = imgs.meteor.red;
-		}, 15);
-
-		setTimeout(() => {
-			this.img.src = imgs.meteor.redTransparent;
-		}, 25);
-
+	damageEffect = bullet => {
+		this.img.src = imgs.meteor.damage;
 		setTimeout(() => {
 			this.img.src = imgs.meteor.default;
-		}, 80);
+		}, 25);
+
+		this.hitAnimationInstance = new HitAnimation(bullet.x, this.y + this.height);
+	};
+}
+
+class HitAnimation {
+	constructor(x, y) {
+		this.width = 36;
+		this.height = 36;
+		this.x = x;
+		this.y = y;
+		this.frame = 0;
+		this.img = new Image();
+		this.img.src = imgs.bullets.default.hit[this.frame];
+		this.allowToDraw = true;
+	}
+
+	draw = y => {
+		this.img.src = imgs.bullets.default.hit[this.frame];
+		ctx.drawImage(this.img, this.x - this.width / 2, y - this.height / 2, this.width, this.height);
+
+		if (this.frame >= imgs.bullets.default.hit.length - 1) {
+			this.allowToDraw = false;
+		} else {
+			this.frame++;
+		}
 	};
 }
 
@@ -272,8 +296,9 @@ class Bullet {
 			y: this.y,
 		};
 		this.img = new Image();
-		this.img.src = imgs.bullets.default;
+		this.img.src = imgs.bullets.default.img;
 		this.img.onload = this.draw;
+		this.frame = 0;
 		this.damage = 1;
 		this.allowToDraw = true;
 		this.type = 'bullet';
