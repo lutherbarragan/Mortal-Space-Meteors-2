@@ -1,45 +1,39 @@
-const BODY = document.querySelector('body');
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-const timer = document.getElementById('timer');
-const scores = document.getElementById('scores');
-const topScore = document.getElementById('topScore');
-const lgScore = document.getElementById('lg');
-const mdScore = document.getElementById('md');
-const smScore = document.getElementById('sm');
-const meteorScores = document.getElementById('meteor-scores');
-const pauseScreen = document.getElementById('pause-screen');
-const playAgain = document.getElementById('playAgain');
-
-let mainInterval;
-let meteorSpawner;
-let time = 0;
-let _1second = 100;
-let isRunning = false;
-let frames = 0;
-let spawnSpeed = 800;
-let currentUpgrade = {
-	allowToDraw: false,
-	instance: {},
+const DOM = {
+	canvas: document.querySelector('canvas'),
+	BODY: document.querySelector('body'),
+	timer: document.getElementById('timer'),
+	scores: document.getElementById('scores'),
+	topScore: document.getElementById('topScore'),
+	meteorScoreDisplay: document.getElementById('meteor-scores'),
+	lgScore: document.getElementById('lg'),
+	mdScore: document.getElementById('md'),
+	smScore: document.getElementById('sm'),
+	pauseScreen: document.getElementById('pause-screen'),
+	playAgain: document.getElementById('playAgain'),
 };
-
-let global_data = {
-	score: 0,
-	time: 0,
-	meteors: {
-		lg: 0,
-		md: 0,
-		sm: 0,
+const STATE = {
+	mainInterval: undefined,
+	meteorSpawner: undefined,
+	time: {
+		totalSeconds: 0,
+		inMinutes: 0,
+		inSeconds: 0,
+	},
+	_1second: 100,
+	isRunning: false,
+	frames: 0,
+	meteorScore: { lg: 0, md: 0, sm: 0 },
+	spawnMeteorEvery: 100,
+	spawnMeteorMax: 40,
+	currentItem: {
+		allowToDraw: false,
+		instance: {},
 	},
 };
-
-canvas.width = BODY.offsetWidth;
-canvas.height = BODY.offsetHeight;
-
-const imgs = {
+const IMAGES = {
 	background: 'src/background/space_horizon.png',
-	player1: {
-		idle: [
+	player: {
+		idle_sequence: [
 			'src/ship/idle/frame_01.png',
 			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_01.png',
@@ -52,33 +46,33 @@ const imgs = {
 			'src/ship/idle/frame_03.png',
 			'src/ship/idle/frame_00.png',
 		],
-		shield: [
-			'src/ship/upgrades/shield/frame_00.png',
-			'src/ship/upgrades/shield/frame_01.png',
-			'src/ship/upgrades/shield/frame_02.png',
-			'src/ship/upgrades/shield/frame_03.png',
-			'src/ship/upgrades/shield/frame_04.png',
-			'src/ship/upgrades/shield/frame_05.png',
-			'src/ship/upgrades/shield/frame_06.png',
-			'src/ship/upgrades/shield/frame_07.png',
-			'src/ship/upgrades/shield/frame_08.png',
-			'src/ship/upgrades/shield/frame_08.png',
-			'src/ship/upgrades/shield/frame_08.png',
-			'src/ship/upgrades/shield/frame_08.png',
+		shield_sequence: [
+			'src/ship/items/shield/frame_00.png',
+			'src/ship/items/shield/frame_01.png',
+			'src/ship/items/shield/frame_02.png',
+			'src/ship/items/shield/frame_03.png',
+			'src/ship/items/shield/frame_04.png',
+			'src/ship/items/shield/frame_05.png',
+			'src/ship/items/shield/frame_06.png',
+			'src/ship/items/shield/frame_07.png',
+			'src/ship/items/shield/frame_08.png',
+			'src/ship/items/shield/frame_08.png',
+			'src/ship/items/shield/frame_08.png',
+			'src/ship/items/shield/frame_08.png',
 		],
-		shotgun: [
-			'src/ship/upgrades/shotgun/frame_00.png',
-			'src/ship/upgrades/shotgun/frame_01.png',
-			'src/ship/upgrades/shotgun/frame_02.png',
-			'src/ship/upgrades/shotgun/frame_03.png',
-			'src/ship/upgrades/shotgun/frame_04.png',
-			'src/ship/upgrades/shotgun/frame_05.png',
-			'src/ship/upgrades/shotgun/frame_06.png',
-			'src/ship/upgrades/shotgun/frame_07.png',
-			'src/ship/upgrades/shotgun/frame_08.png',
-			'src/ship/upgrades/shotgun/frame_08.png',
-			'src/ship/upgrades/shotgun/frame_08.png',
-			'src/ship/upgrades/shotgun/frame_08.png',
+		shotgun_sequence: [
+			'src/ship/items/shotgun/frame_00.png',
+			'src/ship/items/shotgun/frame_01.png',
+			'src/ship/items/shotgun/frame_02.png',
+			'src/ship/items/shotgun/frame_03.png',
+			'src/ship/items/shotgun/frame_04.png',
+			'src/ship/items/shotgun/frame_05.png',
+			'src/ship/items/shotgun/frame_06.png',
+			'src/ship/items/shotgun/frame_07.png',
+			'src/ship/items/shotgun/frame_08.png',
+			'src/ship/items/shotgun/frame_08.png',
+			'src/ship/items/shotgun/frame_08.png',
+			'src/ship/items/shotgun/frame_08.png',
 		],
 	},
 	meteor: {
@@ -86,35 +80,32 @@ const imgs = {
 		damage: 'src/spawns/meteor/meteor_white.png',
 	},
 	bullets: {
-		default: {
-			img: 'src/projectiles/default/bullet.png',
-			hit: [
-				'src/projectiles/default/hit/frame_00.png',
-				'src/projectiles/default/hit/frame_00.png',
-				'src/projectiles/default/hit/frame_00.png',
-				'src/projectiles/default/hit/frame_00.png',
-				'src/projectiles/default/hit/frame_01.png',
-				'src/projectiles/default/hit/frame_01.png',
-				'src/projectiles/default/hit/frame_01.png',
-				'src/projectiles/default/hit/frame_01.png',
-				'src/projectiles/default/hit/frame_02.png',
-				'src/projectiles/default/hit/frame_02.png',
-				'src/projectiles/default/hit/frame_02.png',
-				'src/projectiles/default/hit/frame_02.png',
-			],
-		},
+		default: 'src/projectiles/default/bullet.png',
+		hit_sequence: [
+			'src/projectiles/default/hit/frame_00.png',
+			'src/projectiles/default/hit/frame_00.png',
+			'src/projectiles/default/hit/frame_00.png',
+			'src/projectiles/default/hit/frame_00.png',
+			'src/projectiles/default/hit/frame_01.png',
+			'src/projectiles/default/hit/frame_01.png',
+			'src/projectiles/default/hit/frame_01.png',
+			'src/projectiles/default/hit/frame_01.png',
+			'src/projectiles/default/hit/frame_02.png',
+			'src/projectiles/default/hit/frame_02.png',
+			'src/projectiles/default/hit/frame_02.png',
+			'src/projectiles/default/hit/frame_02.png',
+		],
 	},
-	grabbables: {
+	item_icons: {
 		shield: 'src/grabbables/shield_icon.png',
 		shotgun: 'src/grabbables/shotgun_icon.png',
 	},
 };
-
-const UPGRADES_DATA = [
+const ITEMS_DATA = [
 	{
 		name: 'shotgun',
 		type: 'weapon',
-		img: imgs.grabbables.shotgun,
+		img: IMAGES.item_icons.shotgun,
 		attackSpeed: 50,
 		width: 24,
 		height: 24,
@@ -122,24 +113,10 @@ const UPGRADES_DATA = [
 	{
 		name: 'shield',
 		type: 'defense',
-		img: imgs.grabbables.shield,
+		img: IMAGES.item_icons.shield,
 	},
 ];
-
-// instances
-let board = new Board();
-let player1 = new Player(canvas.width / 2, canvas.height / 2);
-const UNITS = {
-	meteors: [],
-	bullets: [],
-};
-
-const meteorScore = {
-	sm: 0,
-	md: 0,
-	lg: 0,
-};
-const meteorTypes = [
+const METEORS_DATA = [
 	{
 		width: 100,
 		speed: 6,
@@ -165,14 +142,82 @@ const meteorTypes = [
 		size: 'lg',
 	},
 ];
+let LOCAL_DATA = {
+	score: 0,
+	time: {
+		totalSeconds: 0,
+		inMinutes: 0,
+		inSeconds: 0,
+	},
+	meteors: {},
+};
 
-// Aux Functions
-function spawnMeteor() {
-	const newMeteor = meteorTypes[Math.floor(Math.random() * 3)];
-	UNITS.meteors.push(new Meteor(newMeteor));
+const ctx = DOM.canvas.getContext('2d');
+DOM.canvas.width = DOM.BODY.offsetWidth;
+DOM.canvas.height = DOM.BODY.offsetHeight;
+
+// INSTANCES
+const BOARD = new Board();
+const PLAYER = new Player(DOM.canvas.width / 2, DOM.canvas.height / 2);
+let METEORS = [];
+let BULLETS = [];
+
+// AUX FUNCTIONS
+function updateDOM(action) {
+	if (action === 'start') {
+		DOM.timer.style.top = '50px';
+		DOM.scores.style.display = 'block';
+		DOM.topScore.style.display = 'block';
+		DOM.topScore.innerText = `${LOCAL_DATA.score.toLocaleString('en-US')}`;
+		DOM.meteorScoreDisplay.style.display = 'flex';
+		DOM.timer.innerText = `${STATE.time.inMinutes}:${
+			STATE.time.inSeconds < 10 ? `0${STATE.time.inSeconds}` : STATE.time.inSeconds
+		}`;
+		DOM.pauseScreen.style.display = 'none';
+	}
+	if (action === 'update') {
+		// 0.01 second (fps speed)
+		score.innerText = `${PLAYER.score.toLocaleString('en-US')}`;
+		DOM.lgScore.childNodes[1].innerText = STATE.meteorScore.lg;
+		DOM.mdScore.childNodes[1].innerText = STATE.meteorScore.md;
+		DOM.smScore.childNodes[1].innerText = STATE.meteorScore.sm;
+		//  erase current content
+		ctx.clearRect(0, 0, DOM.canvas.width, DOM.canvas.height);
+		//  (Re) Draw new content
+		BOARD.draw();
+	}
+	if (action === 'stop') {
+		DOM.pauseScreen.style.display = 'block';
+	}
 }
+function updateSTATE(action) {
+	if (action === 'start') {
+		STATE.isRunning = true;
+		STATE.mainInterval = setInterval(update, 10); // 100FPS change it ot 16? -> (60 FPS)
+	}
+	if (action === 'stop') {
+		STATE.isRunning = false;
+		clearInterval(STATE.mainInterval);
+	}
+}
+function spawnMeteor() {
+	if (STATE.frames % STATE.spawnMeteorEvery === 0) {
+		const newMeteor = METEORS_DATA[Math.floor(Math.random() * 3)];
+		METEORS.push(new Meteor(newMeteor));
+	}
+	if (STATE.frames % STATE._1second === 0) {
+		if (STATE.spawnMeteorEvery > STATE.spawnMeteorMax) STATE.spawnMeteorEvery -= 2;
+	}
+}
+function spawnItem() {
+	const i = Math.floor(Math.floor(Math.random() * ITEMS_DATA.length));
+	const data = ITEMS_DATA[i];
 
-//COLLITION BETWEEN PLAYR AND METEOR IS NOT BEING TRIGGERED, FIX!!!!
+	//Create a condition to not spawn an ITEM that's already active in the player
+
+	STATE.currentItem.allowToDraw = true;
+	STATE.currentItem.instance = new Item(data);
+}
 function checkCollitionBetween(unit, target) {
 	if (
 		unit.hitbox.x < target.hitbox.x + target.hitbox.width &&
@@ -183,12 +228,10 @@ function checkCollitionBetween(unit, target) {
 		unit.hasCollidedWith(target);
 	}
 }
-
 function checkCooldowns() {
 	// All cooldowns
-	if (!player1.weapon.isReady) reduceCooldownCount(player1, 'weapon');
+	if (!PLAYER.weapon.isReady) reduceCooldownCount(PLAYER, 'weapon');
 }
-
 function reduceCooldownCount(unit, action) {
 	unit[action].cooldownCount--;
 
@@ -196,134 +239,93 @@ function reduceCooldownCount(unit, action) {
 		unit[action].isReady = true;
 	}
 }
+function updatePlayerScore(points) {
+	PLAYER.score += points;
+}
+function updateTime() {
+	STATE.time.totalSeconds++;
+	STATE.time.inMinutes = Math.floor(STATE.time.totalSeconds / 60);
+	STATE.time.inSeconds = STATE.time.totalSeconds % 60;
 
-function spawnUpgrade() {
-	const i = Math.floor(Math.floor(Math.random() * UPGRADES_DATA.length));
-	const data = UPGRADES_DATA[i];
+	DOM.timer.innerText = `${STATE.time.inMinutes}:${
+		STATE.time.inSeconds < 10 ? `0${STATE.time.inSeconds}` : STATE.time.inSeconds
+	}`;
+}
+function updateLocalData() {
+	LOCAL_DATA.score = PLAYER.score; // [FEATURE] Add animation when top score is changing
+	LOCAL_DATA.time = { ...STATE.time };
+	LOCAL_DATA.meteors = { ...STATE.meteorScore };
 
-	//Create a condition to not spawn an UPGRADE that's already active in the player
+	DOM.topScore.innerText = `${LOCAL_DATA.score.toLocaleString('en-US')}`;
 
-	currentUpgrade.allowToDraw = true;
-	currentUpgrade.instance = new Upgrade(data);
+	localStorage.setItem('MSM2TopScore', JSON.stringify(LOCAL_DATA));
 }
 
-// Main Functions
+// MAIN FUNCTIONS
 function start() {
-	global_data = JSON.parse(localStorage.getItem('MSM2TopScore'));
-
-	isRunning = true;
-	timer.style.top = '50px';
-	scores.style.display = 'block';
-	topScore.style.display = 'block';
-	topScore.innerText = `${global_data.score.toLocaleString('en-US')}`;
-	meteorScores.style.display = 'flex';
-	timer.innerText = '0:00';
-	pauseScreen.style.display = 'none';
-
-	meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
-	mainInterval = setInterval(update, 10); // 100FPS
-	playerAnimationInterval = setInterval(player1.framesInterval, 60);
+	LOCAL_DATA = JSON.parse(localStorage.getItem('MSM2TopScore'));
+	updateDOM('start');
+	updateSTATE('start');
+	// [REVIEW]
+	playerAnimationInterval = setInterval(PLAYER.framesInterval, 60);
 }
-
 function update() {
-	frames++;
-
+	STATE.frames++;
 	checkCooldowns();
-	// ...
+	if (STATE.frames % 10 == 0) updatePlayerScore(1); // 10 points per second
+	if (LOCAL_DATA.score < PLAYER.score) updateLocalData();
+	if (STATE.frames % STATE._1second == 0) updateTime();
+	spawnMeteor();
+	updateDOM('update');
 
-	// 10 points per second
-	if (frames % 10 == 0) player1.score += 1;
-
-	if (global_data.score < player1.score) {
-		global_data.score = player1.score; // [FEATURE] Add animation when top score is changing
-		global_data.time = time;
-		global_data.meteors = { ...meteorScore };
-
-		topScore.innerText = `${global_data.score.toLocaleString('en-US')}`;
-
-		localStorage.setItem('MSM2TopScore', JSON.stringify(global_data));
-	}
-
-	// 1 second
-	if (frames % _1second == 0) {
-		time++;
-		let mins = Math.floor(time / 60);
-		let secs = time % 60;
-
-		if (secs < 10) secs = `0${secs}`;
-
-		timer.innerText = `${mins}:${secs}`;
-		if (spawnSpeed > 400) {
-			// clearInterval(meteorSpawner);
-			// spawnSpeed -= 5;
-			// meteorSpawner = setInterval(spawnMeteor, spawnSpeed);
-		}
-	}
-
-	// 0.01 second (fps speed)
-	score.innerText = `${player1.score.toLocaleString('en-US')}`;
-	lgScore.childNodes[1].innerText = meteorScore.lg;
-	mdScore.childNodes[1].innerText = meteorScore.md;
-	smScore.childNodes[1].innerText = meteorScore.sm;
-
-	//  erase current content
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	//  (Re) Draw new content
-	board.draw();
-
-	UNITS.meteors.forEach(meteor => {
-		UNITS.bullets.forEach(bullet => {
+	METEORS.forEach(meteor => {
+		BULLETS.forEach(bullet => {
 			if (bullet.allowToDraw) checkCollitionBetween(meteor, bullet);
 		});
 	});
-	UNITS.meteors.forEach(meteor => checkCollitionBetween(player1, meteor));
-	if (currentUpgrade.allowToDraw) checkCollitionBetween(player1, currentUpgrade.instance);
+	METEORS.forEach(meteor => checkCollitionBetween(PLAYER, meteor));
+	if (STATE.currentItem.allowToDraw) checkCollitionBetween(PLAYER, STATE.currentItem.instance);
 
 	// CHECK AND REMOVE METEORS
-	UNITS.meteors.forEach(meteor => {
-		if (meteor.y > canvas.height) meteor.hp = 0;
+	METEORS.forEach(meteor => {
+		if (meteor.y > DOM.canvas.height) meteor.hp = 0;
 		else meteor.draw();
 	});
-	UNITS.meteors = UNITS.meteors.filter(meteor => meteor.hp > 0);
+	METEORS = METEORS.filter(meteor => meteor.hp > 0);
 
 	// CHECK AND REMOVE BULLETS
-	UNITS.bullets.forEach(bullet => {
+	BULLETS.forEach(bullet => {
 		if (bullet.y < 0) bullet.allowToDraw = false;
 		else bullet.draw();
 	});
-	UNITS.bullets = UNITS.bullets.filter(bullet => bullet.allowToDraw);
+	BULLETS = BULLETS.filter(bullet => bullet.allowToDraw);
 
-	player1.draw();
+	// if (STATE.frames % 6 == 0) PLAYER.framesInterval();
+	PLAYER.draw();
 
 	//FIX**
-	if (frames % 500 == 0) spawnUpgrade();
-	if (currentUpgrade.allowToDraw) currentUpgrade.instance.draw();
-	if (currentUpgrade.instance.y > canvas.height) {
-		currentUpgrade.allowToDraw = false;
-		currentUpgrade.instance = {};
-		console.log(currentUpgrade);
+	if (STATE.frames % 500 == 0) spawnItem();
+	if (STATE.currentItem.allowToDraw) STATE.currentItem.instance.draw();
+	if (STATE.currentItem.instance.y > DOM.canvas.height) {
+		STATE.currentItem.allowToDraw = false;
+		STATE.currentItem.instance = {};
 	}
 
 	// [BUG] Possible bug: Should only substrack HALF of the player's total width
-	if (player1.y > canvas.height) {
+	if (PLAYER.y > DOM.canvas.height) {
 		// stop(); // disabled while in develpment
 
 		let gameOver = `
             <p>GAME OVER</p>
             <button id="playAgain">Play again</button>
         `;
-		pauseScreen.innerHTML = gameOver;
+		DOM.pauseScreen.innerHTML = gameOver;
 
-		const playAgain = document.getElementById('playAgain');
-		playAgain.addEventListener('click', () => window.location.reload());
+		// DOM.playAgain.addEventListener('click', () => window.location.reload());
 	}
 }
-
 function stop() {
-	isRunning = false;
-	pauseScreen.style.display = 'block';
-	clearInterval(mainInterval);
-	clearInterval(meteorSpawner);
+	updateSTATE('stop');
+	updateDOM('stop');
 	clearInterval(playerAnimationInterval);
 }

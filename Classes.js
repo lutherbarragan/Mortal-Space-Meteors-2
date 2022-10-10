@@ -3,10 +3,10 @@ class Board {
 	constructor() {
 		this.x = 0;
 		this.y = 0;
-		this.width = canvas.width;
-		this.height = canvas.height;
+		this.width = DOM.canvas.width;
+		this.height = DOM.canvas.height;
 		this.img = new Image();
-		this.img.src = imgs.background;
+		this.img.src = IMAGES.background;
 		this.img.onload = this.draw;
 	}
 
@@ -34,10 +34,9 @@ class Player {
 		};
 		this.img = new Image();
 		this.frame = 0;
-		this.img.src = imgs.player1.idle[this.frame];
+		this.img.src = IMAGES.player.idle_sequence[this.frame];
 		this.img.onload = this.draw;
 		this.animation = 'idle';
-		this.animationInterval;
 		this.gravity = 2;
 		this.moveSpeed = 3;
 		this.moveDistance = 100;
@@ -54,18 +53,21 @@ class Player {
 		this.type = 'player';
 	}
 
-	draw = () => {
-		if (isRunning) {
-			//UNIT VISUAL
-			// ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
-			// ctx.fillRect(this.x, this.y, this.width, this.height);
+	devDraw = () => {
+		//UNIT VISUAL
+		ctx.fillStyle = 'rgba(0, 255, 47, 0.2)';
+		ctx.fillRect(this.x, this.y, this.width, this.height);
 
+		ctx.fillStyle = 'red';
+		ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
+	};
+
+	draw = () => {
+		if (STATE.isRunning) {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2 - 8;
-			// ctx.fillStyle = 'red';
-			// ctx.fillRect(this.hitbox.x, this.hitbox.y, this.hitbox.width, this.hitbox.height);
-
+			this.devDraw();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
 	};
@@ -97,8 +99,8 @@ class Player {
 			if (distanceTravelled >= this.hitbox.height) {
 				clearInterval(moveDownIntr);
 			}
-			if (this.hitbox.y + this.moveSpeed >= canvas.height - this.hitbox.height) {
-				this.y = canvas.height - this.hitbox.height * 1.5;
+			if (this.hitbox.y + this.moveSpeed >= DOM.canvas.height - this.hitbox.height) {
+				this.y = DOM.canvas.height - this.hitbox.height * 1.5;
 				clearInterval(moveDownIntr);
 			}
 		}, 1);
@@ -117,7 +119,7 @@ class Player {
 
 			if (this.hitbox.x - this.hitbox.width - this.moveSpeed < 0) {
 				if (this.hitbox.x <= 0 - this.hitbox.width) {
-					this.x = canvas.width;
+					this.x = DOM.canvas.width;
 				}
 				distanceTravelled = 0;
 			}
@@ -135,8 +137,8 @@ class Player {
 				clearInterval(moveRightIntr);
 			}
 
-			if (this.hitbox.x + this.hitbox.width + this.moveSpeed > canvas.width) {
-				if (this.hitbox.x >= canvas.width) {
+			if (this.hitbox.x + this.hitbox.width + this.moveSpeed > DOM.canvas.width) {
+				if (this.hitbox.x >= DOM.canvas.width) {
 					this.x = 0 - this.width;
 				}
 				distanceTravelled = 0;
@@ -145,12 +147,14 @@ class Player {
 	};
 
 	framesInterval = () => {
-		if (this.frame === imgs.player1[this.animation].length - 1) {
+		if (this.frame === IMAGES.player[`${this.animation}_sequence`].length - 1) {
 			this.animation = 'idle';
 			this.frame = 0;
+		} else {
+			this.frame++;
 		}
-		this.img.src = imgs.player1[this.animation][this.frame];
-		this.frame++;
+
+		this.img.src = IMAGES.player[`${this.animation}_sequence`][this.frame];
 	};
 
 	updateAnimation = name => {
@@ -168,7 +172,7 @@ class Player {
 		const x = this.x + this.width / 2;
 		const y = this.y + this.height / 3;
 
-		UNITS.bullets.push(new Bullet(x, y));
+		BULLETS.push(new Bullet(x, y));
 
 		this.weapon.isReady = false;
 		this.weapon.cooldownCount = this.weapon.attackSpeed;
@@ -179,10 +183,10 @@ class Player {
 	};
 
 	hasCollidedWith = target => {
-		if (target.type === 'upgrade') {
-			this.updateAnimation(currentUpgrade.instance.name);
-			currentUpgrade.allowToDraw = false;
-			currentUpgrade.instance = {};
+		if (target.type === 'item') {
+			this.updateAnimation(STATE.currentItem.instance.name);
+			STATE.currentItem.allowToDraw = false;
+			STATE.currentItem.instance = {};
 		} else if (target.type === 'meteor') {
 			this.getPushedBack(target.pushback);
 		}
@@ -195,7 +199,7 @@ class Meteor {
 		this.type = 'meteor';
 		this.width = props.width;
 		this.height = props.width;
-		this.x = Math.floor(Math.random() * canvas.width);
+		this.x = Math.floor(Math.random() * DOM.canvas.width);
 		this.y = 0 - this.height;
 		this.hitbox = {
 			width: this.width,
@@ -204,7 +208,7 @@ class Meteor {
 			y: this.y,
 		};
 		this.img = new Image();
-		this.img.src = imgs.meteor.default;
+		this.img.src = IMAGES.meteor.default;
 		this.img.onload = this.draw;
 		this.speed = props.speed;
 		this.hp = props.hp;
@@ -216,7 +220,7 @@ class Meteor {
 	}
 
 	draw = () => {
-		if (isRunning) {
+		if (STATE.isRunning) {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
@@ -241,17 +245,17 @@ class Meteor {
 		this.damageEffect(bullet);
 
 		if (this.hp <= 0) {
-			meteorScore[this.size]++;
-			player1.score += this.value;
+			STATE.meteorScore[this.size]++;
+			PLAYER.score += this.value;
 		}
 
 		bullet.allowToDraw = false;
 	};
 
 	damageEffect = bullet => {
-		this.img.src = imgs.meteor.damage;
+		this.img.src = IMAGES.meteor.damage;
 		setTimeout(() => {
-			this.img.src = imgs.meteor.default;
+			this.img.src = IMAGES.meteor.default;
 		}, 25);
 
 		this.hitAnimationInstance = new HitAnimation(bullet.x, this.y + this.height);
@@ -266,15 +270,15 @@ class HitAnimation {
 		this.y = y;
 		this.frame = 0;
 		this.img = new Image();
-		this.img.src = imgs.bullets.default.hit[this.frame];
+		this.img.src = IMAGES.bullets.hit_sequence[this.frame];
 		this.allowToDraw = true;
 	}
 
 	draw = y => {
-		this.img.src = imgs.bullets.default.hit[this.frame];
+		this.img.src = IMAGES.bullets.hit_sequence[this.frame];
 		ctx.drawImage(this.img, this.x - this.width / 2, y - this.height / 2, this.width, this.height);
 
-		if (this.frame >= imgs.bullets.default.hit.length - 1) {
+		if (this.frame >= IMAGES.bullets.hit_sequence.length - 1) {
 			this.allowToDraw = false;
 		} else {
 			this.frame++;
@@ -296,7 +300,7 @@ class Bullet {
 			y: this.y,
 		};
 		this.img = new Image();
-		this.img.src = imgs.bullets.default.img;
+		this.img.src = IMAGES.bullets.default;
 		this.img.onload = this.draw;
 		this.frame = 0;
 		this.damage = 1;
@@ -305,7 +309,7 @@ class Bullet {
 	}
 
 	draw = () => {
-		if (isRunning) {
+		if (STATE.isRunning) {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
@@ -317,14 +321,14 @@ class Bullet {
 }
 
 //RENAME
-class Upgrade {
+class Item {
 	constructor(data) {
 		this.name = data.name;
-		this.type = 'upgrade';
+		this.type = 'item';
 		this.id = Date.now();
 		this.width = 48;
 		this.height = 48;
-		this.x = Math.floor(Math.random() * canvas.width);
+		this.x = Math.floor(Math.random() * DOM.canvas.width);
 		this.y = 0 - this.height;
 		this.hitbox = {
 			width: this.width,
