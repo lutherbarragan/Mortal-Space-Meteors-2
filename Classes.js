@@ -1,4 +1,3 @@
-// Classes
 class Board {
 	constructor() {
 		this.x = 0;
@@ -179,7 +178,15 @@ class Player {
 	};
 
 	getPushedBack = pushback => {
-		this.y += pushback;
+		let log = 8;
+		let moveDownIntr = setInterval(() => {
+			this.y += pushback / log;
+			log++;
+
+			if (log >= 50) {
+				clearInterval(moveDownIntr);
+			}
+		}, 1);
 	};
 
 	hasCollidedWith = target => {
@@ -328,7 +335,6 @@ class Bullet {
 	};
 }
 
-//RENAME
 class Item {
 	constructor(data) {
 		this.name = data.name;

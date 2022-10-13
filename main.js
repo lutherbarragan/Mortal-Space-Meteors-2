@@ -113,47 +113,49 @@ const IMAGES = {
 		shotgun: 'src/grabbables/shotgun_icon.png',
 	},
 };
-const ITEMS_DATA = [
-	{
-		name: 'shotgun',
-		type: 'weapon',
-		img: IMAGES.item_icons.shotgun,
-		attackSpeed: 50,
-		width: 24,
-		height: 24,
-	},
-	{
-		name: 'shield',
-		type: 'defense',
-		img: IMAGES.item_icons.shield,
-	},
-];
-const METEORS_DATA = [
-	{
-		width: 100,
-		speed: 6,
-		hp: 2,
-		value: 10,
-		pushback: 50,
-		size: 'sm',
-	},
-	{
-		width: 150,
-		speed: 4,
-		hp: 3,
-		value: 50,
-		pushback: 80,
-		size: 'md',
-	},
-	{
-		width: 200,
-		speed: 2,
-		hp: 4,
-		value: 100,
-		pushback: 100,
-		size: 'lg',
-	},
-];
+const PROPERTIES = {
+	items: [
+		{
+			name: 'shotgun',
+			type: 'weapon',
+			img: IMAGES.item_icons.shotgun,
+			attackSpeed: 50,
+			width: 24,
+			height: 24,
+		},
+		{
+			name: 'shield',
+			type: 'defense',
+			img: IMAGES.item_icons.shield,
+		},
+	],
+	meteors: [
+		{
+			width: 100,
+			speed: 6,
+			hp: 2,
+			value: 10,
+			pushback: 50,
+			size: 'sm',
+		},
+		{
+			width: 150,
+			speed: 4,
+			hp: 3,
+			value: 50,
+			pushback: 80,
+			size: 'md',
+		},
+		{
+			width: 200,
+			speed: 2,
+			hp: 4,
+			value: 100,
+			pushback: 100,
+			size: 'lg',
+		},
+	],
+};
 let LOCAL_DATA = {
 	score: 0,
 	time: {
@@ -246,15 +248,15 @@ function updateTime() {
 	}`;
 }
 function spawnMeteor() {
-	const newMeteor = METEORS_DATA[Math.floor(Math.random() * 3)];
+	const newMeteor = PROPERTIES.meteors[Math.floor(Math.random() * 3)];
 	METEORS.push(new Meteor(newMeteor));
 }
 function increaseMeteorSpawnSpeed() {
 	if (STATE.spawnMeteorEvery > STATE.spawnMeteorMax) STATE.spawnMeteorEvery -= 2;
 }
 function spawnItem() {
-	const i = Math.floor(Math.floor(Math.random() * ITEMS_DATA.length));
-	const data = ITEMS_DATA[i];
+	const i = Math.floor(Math.floor(Math.random() * PROPERTIES.items.length));
+	const data = PROPERTIES.items[i];
 
 	//Create a condition to not spawn an ITEM that's already active in the player
 
