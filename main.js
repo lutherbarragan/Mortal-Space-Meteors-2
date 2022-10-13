@@ -9,9 +9,9 @@ const DOM = {
 	mdScore: document.getElementById('md'),
 	smScore: document.getElementById('sm'),
 	pauseScreen: document.getElementById('pause-screen'),
-	playAgain: document.getElementById('playAgain'),
 };
 const STATE = {
+	playerAnimationInterval: undefined,
 	mainInterval: undefined,
 	meteorSpawner: undefined,
 	time: {
@@ -29,21 +29,33 @@ const STATE = {
 		allowToDraw: false,
 		instance: {},
 	},
+	spawnItemEvery: 500,
 };
 const IMAGES = {
 	background: 'src/background/space_horizon.png',
 	player: {
 		idle_sequence: [
 			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_03.png',
+			'src/ship/idle/frame_03.png',
+			'src/ship/idle/frame_01.png',
 			'src/ship/idle/frame_01.png',
 			'src/ship/idle/frame_02.png',
+			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_01.png',
+			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_02.png',
 			'src/ship/idle/frame_03.png',
+			'src/ship/idle/frame_03.png',
+			'src/ship/idle/frame_00.png',
 			'src/ship/idle/frame_00.png',
 		],
 		shield_sequence: [
@@ -163,6 +175,9 @@ let METEORS = [];
 let BULLETS = [];
 
 // AUX FUNCTIONS
+function fetchLocalData() {
+	LOCAL_DATA = JSON.parse(localStorage.getItem('MSM2TopScore'));
+}
 function updateDOM(action) {
 	if (action === 'start') {
 		DOM.timer.style.top = '50px';
@@ -200,14 +215,42 @@ function updateSTATE(action) {
 		clearInterval(STATE.mainInterval);
 	}
 }
+function updateAnimationIntervals(action) {
+	if (action === 'start') {
+		STATE.playerAnimationInterval = setInterval(PLAYER.framesInterval, 60);
+	}
+	if (action === 'stop') {
+		clearInterval(STATE.playerAnimationInterval);
+		STATE.playerAnimationInterval = undefined;
+	}
+}
+function updatePlayerScore(points) {
+	PLAYER.score += points;
+}
+function updateLocalData() {
+	LOCAL_DATA.score = PLAYER.score; // [FEATURE] Add animation when top score is changing
+	LOCAL_DATA.time = { ...STATE.time };
+	LOCAL_DATA.meteors = { ...STATE.meteorScore };
+
+	DOM.topScore.innerText = `${LOCAL_DATA.score.toLocaleString('en-US')}`;
+
+	localStorage.setItem('MSM2TopScore', JSON.stringify(LOCAL_DATA));
+}
+function updateTime() {
+	STATE.time.totalSeconds++;
+	STATE.time.inMinutes = Math.floor(STATE.time.totalSeconds / 60);
+	STATE.time.inSeconds = STATE.time.totalSeconds % 60;
+
+	DOM.timer.innerText = `${STATE.time.inMinutes}:${
+		STATE.time.inSeconds < 10 ? `0${STATE.time.inSeconds}` : STATE.time.inSeconds
+	}`;
+}
 function spawnMeteor() {
-	if (STATE.frames % STATE.spawnMeteorEvery === 0) {
-		const newMeteor = METEORS_DATA[Math.floor(Math.random() * 3)];
-		METEORS.push(new Meteor(newMeteor));
-	}
-	if (STATE.frames % STATE._1second === 0) {
-		if (STATE.spawnMeteorEvery > STATE.spawnMeteorMax) STATE.spawnMeteorEvery -= 2;
-	}
+	const newMeteor = METEORS_DATA[Math.floor(Math.random() * 3)];
+	METEORS.push(new Meteor(newMeteor));
+}
+function increaseMeteorSpawnSpeed() {
+	if (STATE.spawnMeteorEvery > STATE.spawnMeteorMax) STATE.spawnMeteorEvery -= 2;
 }
 function spawnItem() {
 	const i = Math.floor(Math.floor(Math.random() * ITEMS_DATA.length));
@@ -217,16 +260,6 @@ function spawnItem() {
 
 	STATE.currentItem.allowToDraw = true;
 	STATE.currentItem.instance = new Item(data);
-}
-function checkCollitionBetween(unit, target) {
-	if (
-		unit.hitbox.x < target.hitbox.x + target.hitbox.width &&
-		unit.hitbox.x + unit.hitbox.width > target.hitbox.x &&
-		unit.hitbox.y < target.hitbox.y + target.hitbox.height &&
-		unit.hitbox.y + unit.hitbox.height > target.hitbox.y
-	) {
-		unit.hasCollidedWith(target);
-	}
 }
 function checkCooldowns() {
 	// All cooldowns
@@ -239,93 +272,68 @@ function reduceCooldownCount(unit, action) {
 		unit[action].isReady = true;
 	}
 }
-function updatePlayerScore(points) {
-	PLAYER.score += points;
+function checkCollitionBetween(unit, target) {
+	if (
+		unit.hitbox.x < target.hitbox.x + target.hitbox.width &&
+		unit.hitbox.x + unit.hitbox.width > target.hitbox.x &&
+		unit.hitbox.y < target.hitbox.y + target.hitbox.height &&
+		unit.hitbox.y + unit.hitbox.height > target.hitbox.y
+	) {
+		unit.hasCollidedWith(target);
+	}
 }
-function updateTime() {
-	STATE.time.totalSeconds++;
-	STATE.time.inMinutes = Math.floor(STATE.time.totalSeconds / 60);
-	STATE.time.inSeconds = STATE.time.totalSeconds % 60;
+function endGame() {
+	stop(); // disabled while in develpment
 
-	DOM.timer.innerText = `${STATE.time.inMinutes}:${
-		STATE.time.inSeconds < 10 ? `0${STATE.time.inSeconds}` : STATE.time.inSeconds
-	}`;
-}
-function updateLocalData() {
-	LOCAL_DATA.score = PLAYER.score; // [FEATURE] Add animation when top score is changing
-	LOCAL_DATA.time = { ...STATE.time };
-	LOCAL_DATA.meteors = { ...STATE.meteorScore };
+	let gameOver = `
+		<p>GAME OVER</p>
+		<button id="playAgain">Play again</button>
+	`;
+	DOM.pauseScreen.innerHTML = gameOver;
 
-	DOM.topScore.innerText = `${LOCAL_DATA.score.toLocaleString('en-US')}`;
-
-	localStorage.setItem('MSM2TopScore', JSON.stringify(LOCAL_DATA));
+	document.getElementById('playAgain').addEventListener('click', () => window.location.reload());
 }
 
 // MAIN FUNCTIONS
 function start() {
-	LOCAL_DATA = JSON.parse(localStorage.getItem('MSM2TopScore'));
+	fetchLocalData();
 	updateDOM('start');
 	updateSTATE('start');
-	// [REVIEW]
-	playerAnimationInterval = setInterval(PLAYER.framesInterval, 60);
+	updateAnimationIntervals('start');
 }
 function update() {
+	updateDOM('update');
 	STATE.frames++;
-	checkCooldowns();
+
 	if (STATE.frames % 10 == 0) updatePlayerScore(1); // 10 points per second
 	if (LOCAL_DATA.score < PLAYER.score) updateLocalData();
 	if (STATE.frames % STATE._1second == 0) updateTime();
-	spawnMeteor();
-	updateDOM('update');
+	if (STATE.frames % STATE.spawnMeteorEvery === 0) spawnMeteor();
+	if (STATE.frames % STATE._1second === 0) increaseMeteorSpawnSpeed();
+	if (STATE.frames % 500 === 0) spawnItem();
 
+	checkCooldowns();
+
+	METEORS = METEORS.filter(meteor => meteor.allowToDraw);
+	BULLETS = BULLETS.filter(bullet => bullet.allowToDraw);
+
+	PLAYER.draw();
+	METEORS.forEach(meteor => meteor.draw());
+	BULLETS.forEach(bullet => bullet.draw());
+	if (STATE.currentItem.allowToDraw) STATE.currentItem.instance.draw();
+
+	METEORS.forEach(meteor => checkCollitionBetween(PLAYER, meteor));
 	METEORS.forEach(meteor => {
 		BULLETS.forEach(bullet => {
 			if (bullet.allowToDraw) checkCollitionBetween(meteor, bullet);
 		});
 	});
-	METEORS.forEach(meteor => checkCollitionBetween(PLAYER, meteor));
 	if (STATE.currentItem.allowToDraw) checkCollitionBetween(PLAYER, STATE.currentItem.instance);
 
-	// CHECK AND REMOVE METEORS
-	METEORS.forEach(meteor => {
-		if (meteor.y > DOM.canvas.height) meteor.hp = 0;
-		else meteor.draw();
-	});
-	METEORS = METEORS.filter(meteor => meteor.hp > 0);
-
-	// CHECK AND REMOVE BULLETS
-	BULLETS.forEach(bullet => {
-		if (bullet.y < 0) bullet.allowToDraw = false;
-		else bullet.draw();
-	});
-	BULLETS = BULLETS.filter(bullet => bullet.allowToDraw);
-
-	// if (STATE.frames % 6 == 0) PLAYER.framesInterval();
-	PLAYER.draw();
-
-	//FIX**
-	if (STATE.frames % 500 == 0) spawnItem();
-	if (STATE.currentItem.allowToDraw) STATE.currentItem.instance.draw();
-	if (STATE.currentItem.instance.y > DOM.canvas.height) {
-		STATE.currentItem.allowToDraw = false;
-		STATE.currentItem.instance = {};
-	}
-
-	// [BUG] Possible bug: Should only substrack HALF of the player's total width
-	if (PLAYER.y > DOM.canvas.height) {
-		// stop(); // disabled while in develpment
-
-		let gameOver = `
-            <p>GAME OVER</p>
-            <button id="playAgain">Play again</button>
-        `;
-		DOM.pauseScreen.innerHTML = gameOver;
-
-		// DOM.playAgain.addEventListener('click', () => window.location.reload());
-	}
+	if (PLAYER.y > DOM.canvas.height) endGame();
 }
 function stop() {
 	updateSTATE('stop');
 	updateDOM('stop');
-	clearInterval(playerAnimationInterval);
+	updateAnimationIntervals('stop');
 }

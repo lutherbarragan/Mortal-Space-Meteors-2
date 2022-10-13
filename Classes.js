@@ -215,21 +215,25 @@ class Meteor {
 		this.value = props.value;
 		this.pushback = props.pushback;
 		this.size = props.size;
-
+		this.allowToDraw = true;
 		this.hitAnimationInstance = { allowToDraw: false };
 	}
 
 	draw = () => {
 		if (STATE.isRunning) {
-			//HITBOX
-			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
-			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+			if (this.y > DOM.canvas.height) {
+				this.allowToDraw = false;
+			} else {
+				//HITBOX
+				this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+				this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
 
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+				ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 
-			if (this.hitAnimationInstance.allowToDraw) {
-				this.hitAnimationInstance.draw(this.y + this.height);
-			} else this.hitAnimationInstance.allowToDraw = false;
+				if (this.hitAnimationInstance.allowToDraw) {
+					this.hitAnimationInstance.draw(this.y + this.height);
+				} else this.hitAnimationInstance.allowToDraw = false;
+			}
 		}
 
 		this.y += this.speed;
@@ -241,6 +245,7 @@ class Meteor {
 
 	takeDamage = bullet => {
 		this.hp -= bullet.damage;
+		if (this.hp <= 0) this.allowToDraw = false;
 		this.y -= 15;
 		this.damageEffect(bullet);
 
@@ -310,12 +315,15 @@ class Bullet {
 
 	draw = () => {
 		if (STATE.isRunning) {
-			//HITBOX
-			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
-			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+			if (this.y < 0) this.allowToDraw = false;
+			else {
+				//HITBOX
+				this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+				this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
 
-			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-			this.y -= 10;
+				ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+				this.y -= 10;
+			}
 		}
 	};
 }
@@ -343,11 +351,16 @@ class Item {
 	}
 
 	draw = () => {
-		//HITBOX
-		this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
-		this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
+		if (this.y > DOM.canvas.height) {
+			STATE.currentItem.allowToDraw = false;
+			STATE.currentItem.instance = {};
+		} else {
+			//HITBOX
+			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
+			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
 
-		ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-		this.y += this.speed;
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			this.y += this.speed;
+		}
 	};
 }
