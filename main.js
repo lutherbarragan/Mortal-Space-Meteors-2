@@ -117,9 +117,9 @@ const PROPERTIES = {
 	items: [
 		{
 			name: 'shotgun',
-			type: 'weapon',
+			category: 'weapon',
 			img: IMAGES.item_icons.shotgun,
-			attackSpeed: 50,
+			attackSpeed: 70,
 			width: 24,
 			height: 24,
 		},
@@ -135,7 +135,7 @@ const PROPERTIES = {
 			speed: 6,
 			hp: 2,
 			value: 10,
-			pushback: 50,
+			pushback: 100,
 			size: 'sm',
 		},
 		{
@@ -151,7 +151,7 @@ const PROPERTIES = {
 			speed: 2,
 			hp: 4,
 			value: 100,
-			pushback: 100,
+			pushback: 50,
 			size: 'lg',
 		},
 	],

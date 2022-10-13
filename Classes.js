@@ -39,6 +39,8 @@ class Player {
 		this.gravity = 2;
 		this.moveSpeed = 3;
 		this.moveDistance = 100;
+		this.score = 0;
+		this.type = 'player';
 		this.weapon = {
 			type: 'default',
 			attackSpeed: 35,
@@ -48,8 +50,6 @@ class Player {
 		this.defense = {
 			type: 'none',
 		};
-		this.score = 0;
-		this.type = 'player';
 	}
 
 	devDraw = () => {
@@ -66,7 +66,7 @@ class Player {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2 - 8;
-			this.devDraw();
+			// this.devDraw();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
 	};
@@ -164,14 +164,26 @@ class Player {
 	getUpgrade = instance => {
 		this.updateAnimation(instance.name);
 
-		//get attributes...
+		if (instance.category === 'weapon') {
+			this[instance.category].type = instance.name;
+			this[instance.category].attackSpeed = instance.attackSpeed;
+		}
+		if (instance.category === 'shield') {
+			this[instance.category].type = instance.name;
+		}
 	};
 
 	shoot = () => {
 		const x = this.x + this.width / 2;
 		const y = this.y + this.height / 3;
 
-		BULLETS.push(new Bullet(x, y));
+		if (this.weapon.type === 'default') BULLETS.push(new Bullet(x, y, 'default', 0));
+		if (this.weapon.type === 'shotgun') {
+			BULLETS.push(new Bullet(x, y, 'shotgun_01', 250));
+			BULLETS.push(new Bullet(x, y, 'shotgun_02', 250));
+			BULLETS.push(new Bullet(x, y, 'shotgun_03', 250));
+			BULLETS.push(new Bullet(x, y, 'shotgun_04', 250));
+		}
 
 		this.weapon.isReady = false;
 		this.weapon.cooldownCount = this.weapon.attackSpeed;
@@ -191,7 +203,7 @@ class Player {
 
 	hasCollidedWith = target => {
 		if (target.type === 'item') {
-			this.updateAnimation(STATE.currentItem.instance.name);
+			this.getUpgrade(STATE.currentItem.instance);
 			STATE.currentItem.allowToDraw = false;
 			STATE.currentItem.instance = {};
 		} else if (target.type === 'meteor') {
@@ -299,7 +311,7 @@ class HitAnimation {
 }
 
 class Bullet {
-	constructor(x, y) {
+	constructor(x, y, name, limit) {
 		this.id = Date.now();
 		this.width = 12;
 		this.height = 12;
@@ -317,6 +329,9 @@ class Bullet {
 		this.frame = 0;
 		this.damage = 1;
 		this.allowToDraw = true;
+		this.distanceTravelled = 0;
+		this.distanceLimit = limit;
+		this.name = name;
 		this.type = 'bullet';
 	}
 
@@ -329,17 +344,31 @@ class Bullet {
 				this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
 
 				ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-				this.y -= 10;
+				this.move();
 			}
+		}
+	};
+
+	move = () => {
+		this.y -= 10;
+		this.distanceTravelled += 10;
+
+		if (PLAYER.weapon.type === 'shotgun') {
+			if (this.name === 'shotgun_01') this.x -= 3;
+			if (this.name === 'shotgun_02') this.x -= 1;
+			if (this.name === 'shotgun_03') this.x += 1;
+			if (this.name === 'shotgun_04') this.x += 3;
+			if (this.distanceTravelled >= this.distanceLimit) this.allowToDraw = false;
 		}
 	};
 }
 
 class Item {
 	constructor(data) {
-		this.name = data.name;
-		this.type = 'item';
 		this.id = Date.now();
+		this.type = 'item';
+		this.category = data.category;
+		this.name = data.name;
 		this.width = 48;
 		this.height = 48;
 		this.x = Math.floor(Math.random() * DOM.canvas.width);
@@ -354,8 +383,9 @@ class Item {
 		this.img.src = data.img;
 		this.img.onload = this.draw;
 		this.speed = 2;
+		this.attackSpeed = data.attackSpeed;
+		// console.log(data);
 	}
-
 	draw = () => {
 		if (this.y > DOM.canvas.height) {
 			STATE.currentItem.allowToDraw = false;
