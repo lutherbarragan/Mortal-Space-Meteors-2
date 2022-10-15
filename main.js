@@ -86,6 +86,9 @@ const IMAGES = {
 			'src/ship/items/shotgun/frame_08.png',
 			'src/ship/items/shotgun/frame_08.png',
 		],
+		actives: {
+			shield: 'src/ship/actives/shield/frame_00.png',
+		},
 	},
 	meteor: {
 		default: 'src/spawns/meteor/meteor_default.png',
@@ -125,7 +128,7 @@ const PROPERTIES = {
 		},
 		{
 			name: 'shield',
-			type: 'defense',
+			category: 'defense',
 			img: IMAGES.item_icons.shield,
 		},
 	],

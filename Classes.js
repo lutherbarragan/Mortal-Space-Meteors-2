@@ -49,6 +49,9 @@ class Player {
 		};
 		this.defense = {
 			type: 'none',
+			isActive: false,
+			condition: 0,
+			img: undefined,
 		};
 	}
 
@@ -68,6 +71,10 @@ class Player {
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2 - 8;
 			// this.devDraw();
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+
+			if (this.defense.isActive && this.animation === 'idle') {
+				ctx.drawImage(this.defense.img, this.x, this.y, this.width, this.height);
+			}
 		}
 	};
 
@@ -168,8 +175,12 @@ class Player {
 			this[instance.category].type = instance.name;
 			this[instance.category].attackSpeed = instance.attackSpeed;
 		}
-		if (instance.category === 'shield') {
+		if (instance.category === 'defense') {
 			this[instance.category].type = instance.name;
+			this[instance.category].isActive = true;
+			this[instance.category].condition = 3;
+			this[instance.category].img = new Image();
+			this[instance.category].img.src = IMAGES.player.actives.shield;
 		}
 	};
 
@@ -369,8 +380,8 @@ class Item {
 		this.type = 'item';
 		this.category = data.category;
 		this.name = data.name;
-		this.width = 48;
-		this.height = 48;
+		this.width = 64;
+		this.height = 64;
 		this.x = Math.floor(Math.random() * DOM.canvas.width);
 		this.y = 0 - this.height;
 		this.hitbox = {
