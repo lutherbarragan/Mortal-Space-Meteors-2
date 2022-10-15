@@ -49,9 +49,9 @@ class Player {
 		};
 		this.defense = {
 			type: 'none',
-			isActive: false,
 			condition: 0,
 			img: undefined,
+			isActive: false,
 		};
 	}
 
@@ -172,15 +172,17 @@ class Player {
 		this.updateAnimation(instance.name);
 
 		if (instance.category === 'weapon') {
-			this[instance.category].type = instance.name;
-			this[instance.category].attackSpeed = instance.attackSpeed;
+			this.weapon.type = instance.name;
+			this.weapon.attackSpeed = instance.attackSpeed;
 		}
 		if (instance.category === 'defense') {
-			this[instance.category].type = instance.name;
-			this[instance.category].isActive = true;
-			this[instance.category].condition = 3;
-			this[instance.category].img = new Image();
-			this[instance.category].img.src = IMAGES.player.actives.shield;
+			this.defense.type = instance.name;
+			this.defense.condition = IMAGES.player.actives.shield.length;
+			this.defense.img = new Image();
+			this.defense.img.src = IMAGES.player.actives.shield[this.defense.condition - 1];
+			setTimeout(() => {
+				this.defense.isActive = true;
+			}, 800);
 		}
 	};
 
@@ -218,7 +220,19 @@ class Player {
 			STATE.currentItem.allowToDraw = false;
 			STATE.currentItem.instance = {};
 		} else if (target.type === 'meteor') {
-			this.getPushedBack(target.pushback);
+			if (this.defense.isActive) {
+				this.defense.condition--;
+				target.allowToDraw = false;
+
+				if (this.defense.condition > 0) {
+					this.defense.img.src = IMAGES.player.actives.shield[this.defense.condition - 1];
+				} else {
+					this.defense.type = 'none';
+					this.defense.condition = 0;
+					this.defense.img = undefined;
+					this.defense.isActive = false;
+				}
+			} else this.getPushedBack(target.pushback);
 		}
 	};
 }

@@ -87,7 +87,11 @@ const IMAGES = {
 			'src/ship/items/shotgun/frame_08.png',
 		],
 		actives: {
-			shield: 'src/ship/actives/shield/frame_00.png',
+			shield: [
+				'src/ship/actives/shield/frame_00.png',
+				'src/ship/actives/shield/frame_01.png',
+				'src/ship/actives/shield/frame_02.png',
+			],
 		},
 	},
 	meteor: {
