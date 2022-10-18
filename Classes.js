@@ -202,6 +202,28 @@ class Player {
 		this.weapon.cooldownCount = this.weapon.attackSpeed;
 	};
 
+	hasCollidedWith = target => {
+		if (target.type === 'item') {
+			this.getUpgrade(STATE.currentItem.instance);
+			target.destroy();
+		} else if (target.type === 'meteor') {
+			if (this.defense.isActive) {
+				this.defense.condition--;
+				target.destroyAnimation();
+				target.destroy();
+
+				if (this.defense.condition > 0) {
+					this.defense.img.src = IMAGES.player.actives.shield[this.defense.condition - 1];
+				} else {
+					this.defense.type = 'none';
+					this.defense.condition = 0;
+					this.defense.img = undefined;
+					this.defense.isActive = false;
+				}
+			} else this.getPushedBack(target.pushback);
+		}
+	};
+
 	getPushedBack = pushback => {
 		let log = 8;
 		let moveDownIntr = setInterval(() => {
@@ -214,26 +236,8 @@ class Player {
 		}, 1);
 	};
 
-	hasCollidedWith = target => {
-		if (target.type === 'item') {
-			this.getUpgrade(STATE.currentItem.instance);
-			STATE.currentItem.allowToDraw = false;
-			STATE.currentItem.instance = {};
-		} else if (target.type === 'meteor') {
-			if (this.defense.isActive) {
-				this.defense.condition--;
-				target.allowToDraw = false;
-
-				if (this.defense.condition > 0) {
-					this.defense.img.src = IMAGES.player.actives.shield[this.defense.condition - 1];
-				} else {
-					this.defense.type = 'none';
-					this.defense.condition = 0;
-					this.defense.img = undefined;
-					this.defense.isActive = false;
-				}
-			} else this.getPushedBack(target.pushback);
-		}
+	destroy = () => {
+		// Destroy ship, play animation, end game...
 	};
 }
 
@@ -260,13 +264,14 @@ class Meteor {
 		this.pushback = props.pushback;
 		this.size = props.size;
 		this.allowToDraw = true;
-		this.hitAnimationInstance = { allowToDraw: false };
+		this.hitAnimationInstance = {};
+		this.isExploding = false;
 	}
 
 	draw = () => {
 		if (STATE.isRunning) {
 			if (this.y > DOM.canvas.height) {
-				this.allowToDraw = false;
+				this.destroy();
 			} else {
 				//HITBOX
 				this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
@@ -276,7 +281,7 @@ class Meteor {
 
 				if (this.hitAnimationInstance.allowToDraw) {
 					this.hitAnimationInstance.draw(this.y + this.height);
-				} else this.hitAnimationInstance.allowToDraw = false;
+				}
 			}
 		}
 
@@ -289,7 +294,10 @@ class Meteor {
 
 	takeDamage = bullet => {
 		this.hp -= bullet.damage;
-		if (this.hp <= 0) this.allowToDraw = false;
+		if (this.hp <= 0) {
+			this.destroyAnimation();
+			this.destroy();
+		}
 		this.y -= 15;
 		this.damageEffect(bullet);
 
@@ -298,7 +306,7 @@ class Meteor {
 			PLAYER.score += this.value;
 		}
 
-		bullet.allowToDraw = false;
+		bullet.destroy();
 	};
 
 	damageEffect = bullet => {
@@ -307,31 +315,22 @@ class Meteor {
 			this.img.src = IMAGES.meteor.default;
 		}, 25);
 
-		this.hitAnimationInstance = new HitAnimation(bullet.x, this.y + this.height);
+		this.hitAnimationInstance = new BulletHitAnimation(bullet.x, this.y + this.height);
 	};
-}
 
-class HitAnimation {
-	constructor(x, y) {
-		this.width = 36;
-		this.height = 36;
-		this.x = x;
-		this.y = y;
-		this.frame = 0;
-		this.img = new Image();
-		this.img.src = IMAGES.bullets.hit_sequence[this.frame];
-		this.allowToDraw = true;
-	}
-
-	draw = y => {
-		this.img.src = IMAGES.bullets.hit_sequence[this.frame];
-		ctx.drawImage(this.img, this.x - this.width / 2, y - this.height / 2, this.width, this.height);
-
-		if (this.frame >= IMAGES.bullets.hit_sequence.length - 1) {
-			this.allowToDraw = false;
-		} else {
-			this.frame++;
+	destroyAnimation = () => {
+		if (!this.isExploding) {
+			METEOR_EXPLOTIONS.push(new MeteorExplotionAnimation(this.x, this.y, this.width, this.height));
+			this.isExploding = true;
 		}
+	};
+
+	destroy = () => {
+		// update allow To Draw and play explotion animation
+		this.allowToDraw = false;
+		// maybe create a Class similar to BulletHitAnimation (ExplotionAnimation?)
+
+		// use this method on every instance that a meteor is destroyed instead of manually changing its state
 	};
 }
 
@@ -362,7 +361,7 @@ class Bullet {
 
 	draw = () => {
 		if (STATE.isRunning) {
-			if (this.y < 0) this.allowToDraw = false;
+			if (this.y < 0) this.destroy();
 			else {
 				//HITBOX
 				this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
@@ -383,8 +382,12 @@ class Bullet {
 			if (this.name === 'shotgun_02') this.x -= 1;
 			if (this.name === 'shotgun_03') this.x += 1;
 			if (this.name === 'shotgun_04') this.x += 3;
-			if (this.distanceTravelled >= this.distanceLimit) this.allowToDraw = false;
+			if (this.distanceTravelled >= this.distanceLimit) this.destroy();
 		}
+	};
+
+	destroy = () => {
+		this.allowToDraw = false;
 	};
 }
 
@@ -412,10 +415,8 @@ class Item {
 		// console.log(data);
 	}
 	draw = () => {
-		if (this.y > DOM.canvas.height) {
-			STATE.currentItem.allowToDraw = false;
-			STATE.currentItem.instance = {};
-		} else {
+		if (this.y > DOM.canvas.height) this.destroy();
+		else {
 			//HITBOX
 			this.hitbox.x = this.x + this.width / 2 - this.hitbox.width / 2;
 			this.hitbox.y = this.y + this.height / 2 - this.hitbox.height / 2;
@@ -423,5 +424,63 @@ class Item {
 			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
 			this.y += this.speed;
 		}
+	};
+
+	destroy = () => {
+		STATE.currentItem.allowToDraw = false;
+		STATE.currentItem.instance = {};
+	};
+}
+
+// ANIMATIONS
+class BulletHitAnimation {
+	constructor(x, y) {
+		this.width = 36;
+		this.height = 36;
+		this.x = x;
+		this.y = y;
+		this.frame = 0;
+		this.img = new Image();
+		this.allowToDraw = true;
+	}
+
+	draw = y => {
+		if (this.frame > IMAGES.bullets.hit_sequence.length - 1) this.destroy();
+
+		if (this.allowToDraw) {
+			this.img.src = IMAGES.bullets.hit_sequence[this.frame];
+			ctx.drawImage(this.img, this.x - this.width / 2, y - this.height / 2, this.width, this.height);
+			this.frame++;
+		}
+	};
+
+	destroy = () => {
+		this.allowToDraw = false;
+	};
+}
+
+class MeteorExplotionAnimation {
+	constructor(x, y, w, h) {
+		this.width = w;
+		this.height = h;
+		this.x = x;
+		this.y = y;
+		this.frame = 0;
+		this.img = new Image();
+		this.allowToDraw = true;
+	}
+
+	draw = () => {
+		if (this.frame > IMAGES.meteor.explotion_sequence.length - 1) this.destroy();
+
+		if (this.allowToDraw) {
+			this.img.src = IMAGES.meteor.explotion_sequence[this.frame];
+			ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+			this.frame++;
+		}
+	};
+
+	destroy = () => {
+		this.allowToDraw = false;
 	};
 }

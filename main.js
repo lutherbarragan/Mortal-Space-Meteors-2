@@ -97,6 +97,43 @@ const IMAGES = {
 	meteor: {
 		default: 'src/spawns/meteor/meteor_default.png',
 		damage: 'src/spawns/meteor/meteor_white.png',
+		explotion_sequence: [
+			'src/spawns/meteor/explotion/frame_01.png',
+			'src/spawns/meteor/explotion/frame_01.png',
+			'src/spawns/meteor/explotion/frame_01.png',
+			'src/spawns/meteor/explotion/frame_01.png',
+			'src/spawns/meteor/explotion/frame_01.png',
+			'src/spawns/meteor/explotion/frame_02.png',
+			'src/spawns/meteor/explotion/frame_02.png',
+			'src/spawns/meteor/explotion/frame_02.png',
+			'src/spawns/meteor/explotion/frame_02.png',
+			'src/spawns/meteor/explotion/frame_02.png',
+			'src/spawns/meteor/explotion/frame_03.png',
+			'src/spawns/meteor/explotion/frame_03.png',
+			'src/spawns/meteor/explotion/frame_03.png',
+			'src/spawns/meteor/explotion/frame_03.png',
+			'src/spawns/meteor/explotion/frame_03.png',
+			'src/spawns/meteor/explotion/frame_04.png',
+			'src/spawns/meteor/explotion/frame_04.png',
+			'src/spawns/meteor/explotion/frame_04.png',
+			'src/spawns/meteor/explotion/frame_04.png',
+			'src/spawns/meteor/explotion/frame_04.png',
+			'src/spawns/meteor/explotion/frame_05.png',
+			'src/spawns/meteor/explotion/frame_05.png',
+			'src/spawns/meteor/explotion/frame_05.png',
+			'src/spawns/meteor/explotion/frame_05.png',
+			'src/spawns/meteor/explotion/frame_05.png',
+			'src/spawns/meteor/explotion/frame_06.png',
+			'src/spawns/meteor/explotion/frame_06.png',
+			'src/spawns/meteor/explotion/frame_06.png',
+			'src/spawns/meteor/explotion/frame_06.png',
+			'src/spawns/meteor/explotion/frame_06.png',
+			'src/spawns/meteor/explotion/frame_07.png',
+			'src/spawns/meteor/explotion/frame_07.png',
+			'src/spawns/meteor/explotion/frame_07.png',
+			'src/spawns/meteor/explotion/frame_07.png',
+			'src/spawns/meteor/explotion/frame_07.png',
+		],
 	},
 	bullets: {
 		default: 'src/projectiles/default/bullet.png',
@@ -148,7 +185,7 @@ const PROPERTIES = {
 		{
 			width: 150,
 			speed: 4,
-			hp: 3,
+			hp: 4,
 			value: 50,
 			pushback: 80,
 			size: 'md',
@@ -156,7 +193,7 @@ const PROPERTIES = {
 		{
 			width: 200,
 			speed: 2,
-			hp: 4,
+			hp: 8,
 			value: 100,
 			pushback: 50,
 			size: 'lg',
@@ -182,6 +219,7 @@ const BOARD = new Board();
 const PLAYER = new Player(DOM.canvas.width / 2, DOM.canvas.height / 2);
 let METEORS = [];
 let BULLETS = [];
+let METEOR_EXPLOTIONS = [];
 
 // AUX FUNCTIONS
 function fetchLocalData() {
@@ -324,10 +362,12 @@ function update() {
 	checkCooldowns();
 
 	METEORS = METEORS.filter(meteor => meteor.allowToDraw);
+	METEOR_EXPLOTIONS = METEOR_EXPLOTIONS.filter(me => me.allowToDraw);
 	BULLETS = BULLETS.filter(bullet => bullet.allowToDraw);
 
 	PLAYER.draw();
 	METEORS.forEach(meteor => meteor.draw());
+	METEOR_EXPLOTIONS.forEach(me => me.draw());
 	BULLETS.forEach(bullet => bullet.draw());
 	if (STATE.currentItem.allowToDraw) STATE.currentItem.instance.draw();
 
