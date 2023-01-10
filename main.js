@@ -329,8 +329,13 @@ function checkCollitionBetween(unit, target) {
 		unit.hasCollidedWith(target);
 	}
 }
+function playFX(fileName) {
+	const FX = new Audio();
+	FX.src = `src/audio/${fileName}`;
+	FX.play();
+}
 function endGame() {
-	stop(); // disabled while in develpment
+	stop();
 
 	let gameOver = `
 		<p>GAME OVER</p>
@@ -339,6 +344,7 @@ function endGame() {
 	DOM.pauseScreen.innerHTML = gameOver;
 
 	document.getElementById('playAgain').addEventListener('click', () => window.location.reload());
+	playFX('game-over.aac');
 }
 
 // MAIN FUNCTIONS
@@ -347,10 +353,13 @@ function start() {
 	updateDOM('start');
 	updateSTATE('start');
 	updateAnimationIntervals('start');
+	BOARD.music.play();
 }
 function update() {
 	updateDOM('update');
 	STATE.frames++;
+
+	if (STATE.time.totalSeconds >= 112) BOARD.music.play();
 
 	if (STATE.frames % 10 == 0) updatePlayerScore(1); // 10 points per second
 	if (LOCAL_DATA.score < PLAYER.score) updateLocalData();
@@ -385,4 +394,5 @@ function stop() {
 	updateSTATE('stop');
 	updateDOM('stop');
 	updateAnimationIntervals('stop');
+	BOARD.music.pause();
 }

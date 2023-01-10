@@ -7,6 +7,8 @@ class Board {
 		this.img = new Image();
 		this.img.src = IMAGES.background;
 		this.img.onload = this.draw;
+		this.music = new Audio();
+		this.music.src = 'src/audio/interplanetary_odyssey.mp3';
 	}
 
 	draw = () => {
@@ -190,12 +192,16 @@ class Player {
 		const x = this.x + this.width / 2;
 		const y = this.y + this.height / 3;
 
-		if (this.weapon.type === 'default') BULLETS.push(new Bullet(x, y, 'default', 0));
-		if (this.weapon.type === 'shotgun') {
+		if (this.weapon.type === 'default') {
+			BULLETS.push(new Bullet(x, y, 'default', 0));
+			playFX('shooting.wav');
+		} else if (this.weapon.type === 'shotgun') {
 			BULLETS.push(new Bullet(x, y, 'shotgun_01', 250));
 			BULLETS.push(new Bullet(x, y, 'shotgun_02', 250));
 			BULLETS.push(new Bullet(x, y, 'shotgun_03', 250));
 			BULLETS.push(new Bullet(x, y, 'shotgun_04', 250));
+			playFX('shooting-shotgun.wav');
+			playFX('shooting-shotgun.wav'); //not needed twice but it sounds better
 		}
 
 		this.weapon.isReady = false;
@@ -204,6 +210,8 @@ class Player {
 
 	hasCollidedWith = target => {
 		if (target.type === 'item') {
+			playFX('grab.wav');
+
 			this.getUpgrade(STATE.currentItem.instance);
 			target.destroy();
 		} else if (target.type === 'meteor') {
@@ -221,6 +229,7 @@ class Player {
 					this.defense.isActive = false;
 				}
 			} else this.getPushedBack(target.pushback);
+			playFX('damage.wav');
 		}
 	};
 
@@ -322,6 +331,7 @@ class Meteor {
 		if (!this.isExploding) {
 			METEOR_EXPLOTIONS.push(new MeteorExplotionAnimation(this.x, this.y, this.width, this.height));
 			this.isExploding = true;
+			playFX('meteor_explosion.aac');
 		}
 	};
 

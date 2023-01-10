@@ -6,8 +6,13 @@ window.addEventListener('load', () => {
 addEventListener('keydown', e => {
 	// GAME EVENTS
 	if (e.keyCode == 13) {
-		if (STATE.isRunning) stop();
-		else start();
+		if (STATE.isRunning) {
+			playFX('pause-in.wav');
+			stop();
+		} else {
+			if (STATE.frames > 0) playFX('pause-out.wav');
+			start();
+		}
 	}
 
 	// PLAYER EVENTS
