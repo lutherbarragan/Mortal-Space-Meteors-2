@@ -1,6 +1,6 @@
 // listeners
 window.addEventListener('load', () => {
-	if (!localStorage.getItem('MSM2TopScore')) localStorage.setItem('MSM2TopScore', JSON.stringify(savedData));
+	if (!localStorage.getItem('MSM2TopScore')) localStorage.setItem('MSM2TopScore', JSON.stringify(LOCAL_DATA));
 });
 
 addEventListener('keydown', e => {
